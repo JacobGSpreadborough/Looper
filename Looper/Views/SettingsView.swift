@@ -9,12 +9,12 @@ import SwiftUI
 import AudioKit
 
 struct SettingsView: View {
-    @State private var EQ60: AUValue = 0;
-    @State private var EQ150: AUValue = 0;
-    @State private var EQ400: AUValue = 0;
-    @State private var EQ1k: AUValue = 0;
-    @State private var EQ2k4: AUValue = 0;
-    @State private var EQ15k: AUValue = 0;
+    @State var EQ60: AUValue = 0;
+    @State var EQ150: AUValue = 0;
+    @State var EQ400: AUValue = 0;
+    @State var EQ1k: AUValue = 0;
+    @State var EQ2k4: AUValue = 0;
+    @State var EQ15k: AUValue = 0;
     var body: some View {
         VStack{
             // TODO put this at the top
@@ -22,120 +22,30 @@ struct SettingsView: View {
                 .font(.title)
                 .padding()
             HStack{
-                VStack{
-                    Text("\(EQ60, specifier: "%0.1f")dB")
-                        .fixedSize()
-                        .monospacedDigit()
-                        .frame(height:150,alignment:.top)
-                    Slider(
-                        value: $EQ60,
-                        in: -20...20
-                    )
-                    .frame(width:300)
-                    .fixedSize()
-                    .rotationEffect(Angle(degrees: -90))
+                EQSlider(EQ: $EQ60, label: "60Hz")
                     .onChange(of: EQ60, {
                         looper.setEQ60(gain: EQ60)
                     })
-                    Text("60Hz")
-                        .frame(height:150,alignment:.bottom)
-                }
-                .frame(width: 52)
-                VStack{
-                    Text("\(EQ150, specifier: "%0.1f")dB")
-                        .fixedSize()
-                        .monospacedDigit()
-                        .frame(height:150,alignment:.top)
-                    Slider(
-                        value: $EQ150,
-                        in: -20...20
-                    )
-                    .frame(width:300)
-                    .fixedSize()
-                    .rotationEffect(Angle(degrees: -90))
+                EQSlider(EQ: $EQ150, label: "150Hz")
                     .onChange(of: EQ150, {
                         looper.setEQ150(gain: EQ150)
                     })
-                    Text("150Hz")
-                        .frame(height:150,alignment:.bottom)
-                }
-                .frame(width: 52)
-                VStack{
-                    Text("\(EQ400, specifier: "%0.1f")dB")
-                        .fixedSize()
-                        .monospacedDigit()
-                        .frame(height:150,alignment:.top)
-                    Slider(
-                        value: $EQ400,
-                        in: -20...20
-                    )
-                    .frame(width:300)
-                    .fixedSize()
-                    .rotationEffect(Angle(degrees: -90))
+                EQSlider(EQ: $EQ400, label: "400Hz")
                     .onChange(of: EQ400, {
                         looper.setEQ400(gain: EQ400)
                     })
-                    Text("400Hz")
-                        .frame(height:150,alignment:.bottom)
-                }
-                .frame(width: 52)
-                VStack{
-                    Text("\(EQ1k, specifier: "%0.1f")dB")
-                        .fixedSize()
-                        .monospacedDigit()
-                        .frame(height:150,alignment:.top)
-                    Slider(
-                        value: $EQ1k,
-                        in: -20...20
-                    )
-                    .frame(width:300)
-                    .fixedSize()
-                    .rotationEffect(Angle(degrees: -90))
+                EQSlider(EQ: $EQ1k, label: "1kHz")
                     .onChange(of: EQ1k, {
                         looper.setEQ1k(gain: EQ1k)
                     })
-                    Text("1kHz")
-                        .frame(height:150,alignment:.bottom)
-                }
-                .frame(width: 52)
-                VStack{
-                    Text("\(EQ2k4, specifier: "%0.1f")dB")
-                        .fixedSize()
-                        .monospacedDigit()
-                        .frame(height:150,alignment:.top)
-                    Slider(
-                        value: $EQ2k4,
-                        in: -20...20
-                    )
-                    .frame(width:300)
-                    .fixedSize()
-                    .rotationEffect(Angle(degrees: -90))
+                EQSlider(EQ: $EQ2k4, label: "2k4Hz")
                     .onChange(of: EQ2k4, {
                         looper.setEQ2k4(gain: EQ2k4)
                     })
-                    Text("2k4Hz")
-                        .frame(height:150,alignment:.bottom)
-                }
-                .frame(width: 52)
-                VStack{
-                    Text("\(EQ15k, specifier: "%0.1f")dB")
-                        .fixedSize()
-                        .monospacedDigit()
-                        .frame(height:150,alignment:.top)
-                    Slider(
-                        value: $EQ15k,
-                        in: -20...20
-                    )
-                    .frame(width:300)
-                    .fixedSize()
-                    .rotationEffect(Angle(degrees: -90))
+                EQSlider(EQ: $EQ15k, label: "15kHz")
                     .onChange(of: EQ15k, {
                         looper.setEQ15k(gain: EQ15k)
                     })
-                    Text("15kHz")
-                        .frame(height:150,alignment:.bottom)
-                }
-                .frame(width: 52)
             }
             .padding()
             .background(Color(.secondarySystemBackground))

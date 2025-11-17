@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import AudioKit
 
 class Utils {
     public static func timeFormatter(time: Double) -> String {
@@ -35,3 +36,39 @@ struct CustomButtonStyle: ButtonStyle {
   }
 }
 
+struct EQSlider: View {
+    @Binding var EQ: AUValue
+    var label: String
+    var body: some View {
+        VStack{
+            Text("\(EQ, specifier: "%0.1f")dB")
+                .fixedSize()
+                .monospacedDigit()
+                .frame(height:150,alignment:.top)
+            Slider(
+                value: $EQ,
+                in: -20...20
+            )
+            .frame(width:300)
+            .fixedSize()
+            .rotationEffect(Angle(degrees: -90))
+            Text(label)
+                .frame(height:150,alignment:.bottom)
+        }
+        .frame(width: 52)
+    }
+}
+
+struct CustomLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.icon
+                .foregroundStyle(.foreground)
+            configuration.title
+                .foregroundStyle(.foreground)
+        }
+            .fixedSize()
+            .monospacedDigit()
+            .frame(height:150,alignment:.top)
+    }
+}
