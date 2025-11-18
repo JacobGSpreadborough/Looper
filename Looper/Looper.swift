@@ -21,7 +21,6 @@ class Looper {
     var speedPitch: TimePitch!
     // steps above or below original
     var pitch: AUValue = 0
-    var mixer: Mixer!
     var EQ60: ParametricEQ!
     var EQ150: ParametricEQ!
     var EQ400: ParametricEQ!
@@ -45,17 +44,14 @@ class Looper {
         player.isEditTimeEnabled = true;
         player.isLooping = false
         player.volume = 0.5
+        EQ60 = ParametricEQ(player, centerFreq: 60, q: 1, gain: 0)
+        EQ150 = ParametricEQ(EQ60, centerFreq: 150, q: 1, gain: 0)
+        EQ400 = ParametricEQ(EQ150, centerFreq: 400,  q: 1, gain: 0)
+        EQ1k = ParametricEQ(EQ400, centerFreq: 1000, q: 1, gain: 0)
+        EQ2k4 = ParametricEQ(EQ1k, centerFreq: 2400,  q: 1, gain: 0)
+        EQ15k = ParametricEQ(EQ2k4, centerFreq: 15000,  q: 1, gain: 0)
         
-        EQ60 = ParametricEQ(player, centerFreq: 60, q: 0.1, gain: 0)
-        EQ150 = ParametricEQ(player, centerFreq: 150, q: 0.1, gain: 0)
-        EQ400 = ParametricEQ(player, centerFreq: 400,  q: 0.1, gain: 0)
-        EQ1k = ParametricEQ(player, centerFreq: 1000, q: 0.1, gain: 0)
-        EQ2k4 = ParametricEQ(player, centerFreq: 2400,  q: 0.1, gain: 0)
-        EQ15k = ParametricEQ(player, centerFreq: 15000,  q: 0.1, gain: 0)
-        
-        mixer = Mixer(EQ60,EQ150,EQ400,EQ1k,EQ2k4,EQ15k)
-        
-        speedPitch = TimePitch(mixer)
+        speedPitch = TimePitch(EQ15k)
         
         engine.output = speedPitch
         try!engine.start()
@@ -165,5 +161,4 @@ class Looper {
     open func setEQ15k(gain: Float) {
         EQ15k.gain = gain
     }
-    
 };

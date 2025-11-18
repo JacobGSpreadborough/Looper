@@ -21,6 +21,7 @@ struct ContentView: View {
     let volumeIcons = ["speaker", "speaker.1", "speaker.2", "speaker.3"]
     var body: some View {
         NavigationView {
+            // main stack
             VStack {
                 HStack(alignment: .top){
                     // TODO these buttons are bad
@@ -325,8 +326,6 @@ struct ContentView: View {
                     )
                     .onChange(of: volume, {
                         looper.player.volume = volume
-                        print(volume)
-                        print(Int(volume*4))
                     })
                 }
                 .padding()

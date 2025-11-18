@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		F63621362ECBFE9F00A409FC /* Waveform in Frameworks */ = {isa = PBXBuildFile; productRef = F63621352ECBFE9F00A409FC /* Waveform */; };
-		F6A61EF82EAB8651009A1210 /* SoundpipeAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = F6A61EF72EAB8651009A1210 /* SoundpipeAudioKit */; };
+		F6A666742ECCB72500311966 /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = F6A666732ECCB72500311966 /* AudioKit */; };
+		F6A666772ECCB9E700311966 /* SoundpipeAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = F6A666762ECCB9E700311966 /* SoundpipeAudioKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,8 +58,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6A61EF82EAB8651009A1210 /* SoundpipeAudioKit in Frameworks */,
+				F6A666742ECCB72500311966 /* AudioKit in Frameworks */,
 				F63621362ECBFE9F00A409FC /* Waveform in Frameworks */,
+				F6A666772ECCB9E700311966 /* SoundpipeAudioKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,8 +121,9 @@
 			);
 			name = Looper;
 			packageProductDependencies = (
-				F6A61EF72EAB8651009A1210 /* SoundpipeAudioKit */,
 				F63621352ECBFE9F00A409FC /* Waveform */,
+				F6A666732ECCB72500311966 /* AudioKit */,
+				F6A666762ECCB9E700311966 /* SoundpipeAudioKit */,
 			);
 			productName = Looper;
 			productReference = F6A61ECC2EAB8598009A1210 /* Looper.app */;
@@ -205,8 +208,9 @@
 			mainGroup = F6A61EC32EAB8598009A1210;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F6A61EF62EAB8651009A1210 /* XCRemoteSwiftPackageReference "soundpipeaudiokit" */,
 				F63621342ECBFE9F00A409FC /* XCRemoteSwiftPackageReference "Waveform" */,
+				F6A666722ECCB72500311966 /* XCRemoteSwiftPackageReference "AudioKit" */,
+				F6A666752ECCB9E700311966 /* XCRemoteSwiftPackageReference "soundpipeaudiokit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F6A61ECD2EAB8598009A1210 /* Products */;
@@ -597,7 +601,15 @@
 				minimumVersion = 1.0.2;
 			};
 		};
-		F6A61EF62EAB8651009A1210 /* XCRemoteSwiftPackageReference "soundpipeaudiokit" */ = {
+		F6A666722ECCB72500311966 /* XCRemoteSwiftPackageReference "AudioKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/AudioKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.5;
+			};
+		};
+		F6A666752ECCB9E700311966 /* XCRemoteSwiftPackageReference "soundpipeaudiokit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AudioKit/soundpipeaudiokit";
 			requirement = {
@@ -613,9 +625,14 @@
 			package = F63621342ECBFE9F00A409FC /* XCRemoteSwiftPackageReference "Waveform" */;
 			productName = Waveform;
 		};
-		F6A61EF72EAB8651009A1210 /* SoundpipeAudioKit */ = {
+		F6A666732ECCB72500311966 /* AudioKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F6A61EF62EAB8651009A1210 /* XCRemoteSwiftPackageReference "soundpipeaudiokit" */;
+			package = F6A666722ECCB72500311966 /* XCRemoteSwiftPackageReference "AudioKit" */;
+			productName = AudioKit;
+		};
+		F6A666762ECCB9E700311966 /* SoundpipeAudioKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6A666752ECCB9E700311966 /* XCRemoteSwiftPackageReference "soundpipeaudiokit" */;
 			productName = SoundpipeAudioKit;
 		};
 /* End XCSwiftPackageProductDependency section */
