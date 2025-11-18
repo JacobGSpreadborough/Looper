@@ -39,6 +39,8 @@ struct CustomButtonStyle: ButtonStyle {
 struct EQSlider: View {
     @Binding var EQ: AUValue
     var label: String
+    var min: AUValue
+    var max: AUValue
     var body: some View {
         VStack{
             Text("\(EQ, specifier: "%0.1f")dB")
@@ -47,7 +49,7 @@ struct EQSlider: View {
                 .frame(height:150,alignment:.top)
             Slider(
                 value: $EQ,
-                in: -20...20
+                in: min...max
             )
             .frame(width:300)
             .fixedSize()

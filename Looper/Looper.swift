@@ -21,19 +21,19 @@ class Looper {
     var speedPitch: TimePitch!
     // steps above or below original
     var pitch: AUValue = 0
-    var EQ60: ParametricEQ!
+    var EQ60: LowShelfFilter!
     var EQ150: ParametricEQ!
     var EQ400: ParametricEQ!
     var EQ1k: ParametricEQ!
     var EQ2k4: ParametricEQ!
-    var EQ15k: ParametricEQ!
+    var EQ10k: HighShelfFilter!
     // we do not start playing automatically
     var isPlaying: Bool = false
     var isLooping: Bool = false
     var duration: Double
     
     // TODO select song from settings menu
-    let fileName:String = "Miles Davis Quintet - It Never Entered My Mind"
+    let fileName:String = "stevie"
     
     init() {
         
@@ -44,14 +44,14 @@ class Looper {
         player.isEditTimeEnabled = true;
         player.isLooping = false
         player.volume = 0.5
-        EQ60 = ParametricEQ(player, centerFreq: 60, q: 1, gain: 0)
+        EQ60 = LowShelfFilter(player, cutoffFrequency: 60, gain: 0)
         EQ150 = ParametricEQ(EQ60, centerFreq: 150, q: 1, gain: 0)
         EQ400 = ParametricEQ(EQ150, centerFreq: 400,  q: 1, gain: 0)
         EQ1k = ParametricEQ(EQ400, centerFreq: 1000, q: 1, gain: 0)
         EQ2k4 = ParametricEQ(EQ1k, centerFreq: 2400,  q: 1, gain: 0)
-        EQ15k = ParametricEQ(EQ2k4, centerFreq: 15000,  q: 1, gain: 0)
+        EQ10k = HighShelfFilter(EQ2k4, cutOffFrequency: 10000, gain: 0)
         
-        speedPitch = TimePitch(EQ15k)
+        speedPitch = TimePitch(EQ10k)
         
         engine.output = speedPitch
         try!engine.start()
@@ -158,7 +158,7 @@ class Looper {
     open func setEQ2k4(gain: Float) {
         EQ2k4.gain = gain
     }
-    open func setEQ15k(gain: Float) {
-        EQ15k.gain = gain
+    open func setEQ10k(gain: Float) {
+        EQ10k.gain = gain
     }
 };
