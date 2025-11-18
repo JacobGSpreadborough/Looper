@@ -277,6 +277,12 @@ struct ContentView: View {
                     }
                     ZStack{
                         // TODO add waveform over the loop, it takes sample numbers rather that TimeIntervals
+                        Waveform(samples: looper.samples,
+                                 start: looper.loopStartSample,
+                                 length: looper.loopLengthSample)
+                        .foregroundColor(.blue)
+                        .opacity(0.25)
+                        .frame(width:175)
                         Slider(
                             value: $currentTime,
                             in: looper.player.editStartTime...looper.player.editEndTime,

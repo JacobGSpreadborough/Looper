@@ -5,15 +5,17 @@
 //  Created by Jacob Spreadborough on 11/10/25.
 //
 
-import Combine
 import AudioKit
-import Foundation
 import Waveform
 import AVFAudio
 
-class Looper: ObservableObject {
+class Looper {
     private let engine = AudioEngine()
     var samples: SampleBuffer
+    // start point and duration in samples rather than seconds
+    var loopStartSample: Int
+    var loopLengthSample: Int
+    // prevent loops from being too short
     let MINIMUM_LOOP_LENGTH: TimeInterval = 1
     var player: AudioPlayer!
     var speedPitch: TimePitch!
@@ -27,9 +29,9 @@ class Looper: ObservableObject {
     var EQ2k4: ParametricEQ!
     var EQ15k: ParametricEQ!
     // we do not start playing automatically
-    @Published var isPlaying: Bool = false
-    @Published var isLooping: Bool = false
-    @Published var duration: Double
+    var isPlaying: Bool = false
+    var isLooping: Bool = false
+    var duration: Double
     
     // TODO select song from settings menu
     let fileName:String = "Miles Davis Quintet - It Never Entered My Mind"
@@ -59,6 +61,9 @@ class Looper: ObservableObject {
         try!engine.start()
         
         samples = SampleBuffer(samples: file.floatChannelData()![0])
+        loopStartSample = Int(player.editStartTime * player.outputFormat.sampleRate)
+        loopLengthSample = Int((player.editEndTime - player.editStartTime) * player.outputFormat.sampleRate)
+        
     }
     
     open func changePitch(steps: AUValue) {
@@ -79,7 +84,11 @@ class Looper: ObservableObject {
         } else{
             player.editStartTime = startTime
         }
+        // adjust start and end variables for the waveform display
+        loopStartSample = Int(player.editStartTime * player.outputFormat.sampleRate)
+        loopLengthSample = Int((player.editEndTime - player.editStartTime) * player.outputFormat.sampleRate)
     }
+    
     open func setLoopEnd(endTime: TimeInterval) {
         // prevent loop from being too short
         if((player.editEndTime - player.editStartTime) < MINIMUM_LOOP_LENGTH) {
@@ -92,6 +101,8 @@ class Looper: ObservableObject {
                 player.editEndTime = endTime
             }
         }
+        // adjust start and end variables for the waveform display
+        loopLengthSample = Int((player.editEndTime - player.editStartTime) * player.outputFormat.sampleRate)
     }
     
     open func enableLooping() {
