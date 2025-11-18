@@ -8,6 +8,7 @@
 import SwiftUI
 import SoundpipeAudioKit
 import AudioKit
+import Waveform
 
 var looper = Looper()
 
@@ -39,36 +40,42 @@ struct ContentView: View {
                     Text("\(looper.fileName)")
                         .multilineTextAlignment(.center)
                         .padding()
-                    Slider(
-                        value: $currentTime,
-                        in: 0...looper.duration,
-                        label: {},
-                        minimumValueLabel: {
-                            Text("\(Utils.timeFormatter(time: currentTime))")
-                                .monospacedDigit()
-                        },
-                        maximumValueLabel: {
-                            Text("\(Utils.timeFormatter(time: looper.duration))")
-                                .monospacedDigit()
-                        },
-                        // bug? if you hold down the slider while the song is playing,
-                        // when you release the slider it will call this twice, first
-                        // with editing = false, then with editing = true
-                        onEditingChanged: { editing in
-                            print("editing:\(editing)")
-                            if(editing) {
-                                wasPlaying = looper.isPlaying
-                                sliderUpdating = false
-                                // using the main progress slider turns off looping
-                                looper.stop()
-                                looper.disableLooping()
-                            } else {
-                                looper.seek(time:currentTime)
-                                sliderUpdating = true
-                                wasPlaying ? looper.play() : looper.pause()
+                    ZStack{
+                        Waveform(samples: looper.samples)
+                            .foregroundColor(.blue)
+                            .opacity(0.25)
+                            .frame(width: 180)
+                        Slider(
+                            value: $currentTime,
+                            in: 0...looper.duration,
+                            label: {},
+                            minimumValueLabel: {
+                                Text("\(Utils.timeFormatter(time: currentTime))")
+                                    .monospacedDigit()
+                            },
+                            maximumValueLabel: {
+                                Text("\(Utils.timeFormatter(time: looper.duration))")
+                                    .monospacedDigit()
+                            },
+                            // bug? if you hold down the slider while the song is playing,
+                            // when you release the slider it will call this twice, first
+                            // with editing = false, then with editing = true
+                            onEditingChanged: { editing in
+                                print("editing:\(editing)")
+                                if(editing) {
+                                    wasPlaying = looper.isPlaying
+                                    sliderUpdating = false
+                                    // using the main progress slider turns off looping
+                                    looper.stop()
+                                    looper.disableLooping()
+                                } else {
+                                    looper.seek(time:currentTime)
+                                    sliderUpdating = true
+                                    wasPlaying ? looper.play() : looper.pause()
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                     .onAppear {
                         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
                             if(sliderUpdating){
@@ -268,38 +275,41 @@ struct ContentView: View {
                         }
                         .buttonStyle(CustomButtonStyle())
                     }
-                    Slider(
-                        value: $currentTime,
-                        in: looper.player.editStartTime...looper.player.editEndTime,
-                        label: {},
-                        minimumValueLabel: {
-                            Text("\(Utils.timeFormatter(time: looper.player.editStartTime))")
-                                .monospacedDigit()
-                        },
-                        maximumValueLabel: {
-                            Text("\(Utils.timeFormatter(time: looper.player.editEndTime))")
-                                .monospacedDigit()
-                        },
-                        onEditingChanged: { editing in
-                            if(editing) {
-                                wasPlaying = looper.isPlaying
-                                looper.pause()
-                                sliderUpdating = false
-                            } else {
-                                looper.seek(time:currentTime)
-                                wasPlaying ? looper.play() : looper.pause()
-                                sliderUpdating = true
+                    ZStack{
+                        // TODO add waveform over the loop, it takes sample numbers rather that TimeIntervals
+                        Slider(
+                            value: $currentTime,
+                            in: looper.player.editStartTime...looper.player.editEndTime,
+                            label: {},
+                            minimumValueLabel: {
+                                Text("\(Utils.timeFormatter(time: looper.player.editStartTime))")
+                                    .monospacedDigit()
+                            },
+                            maximumValueLabel: {
+                                Text("\(Utils.timeFormatter(time: looper.player.editEndTime))")
+                                    .monospacedDigit()
+                            },
+                            onEditingChanged: { editing in
+                                if(editing) {
+                                    wasPlaying = looper.isPlaying
+                                    looper.pause()
+                                    sliderUpdating = false
+                                } else {
+                                    looper.seek(time:currentTime)
+                                    wasPlaying ? looper.play() : looper.pause()
+                                    sliderUpdating = true
+                                }
                             }
-                        }
-                    )
-                    .padding(.vertical)
-                    .disabled(!looper.isLooping)
-                    // stack for volume icon and slider
+                        )
+                        .padding(.vertical)
+                        .disabled(!looper.isLooping)
+                    }
                 }
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 // volume
+                // stack for volume icon and slider
                 HStack {
                     // TODO make it perfect
                     Image(systemName: volumeIcons[Int(volume * 3)])

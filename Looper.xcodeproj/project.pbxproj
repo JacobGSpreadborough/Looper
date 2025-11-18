@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F63621362ECBFE9F00A409FC /* Waveform in Frameworks */ = {isa = PBXBuildFile; productRef = F63621352ECBFE9F00A409FC /* Waveform */; };
 		F6A61EF82EAB8651009A1210 /* SoundpipeAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = F6A61EF72EAB8651009A1210 /* SoundpipeAudioKit */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6A61EF82EAB8651009A1210 /* SoundpipeAudioKit in Frameworks */,
+				F63621362ECBFE9F00A409FC /* Waveform in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +120,7 @@
 			name = Looper;
 			packageProductDependencies = (
 				F6A61EF72EAB8651009A1210 /* SoundpipeAudioKit */,
+				F63621352ECBFE9F00A409FC /* Waveform */,
 			);
 			productName = Looper;
 			productReference = F6A61ECC2EAB8598009A1210 /* Looper.app */;
@@ -203,6 +206,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F6A61EF62EAB8651009A1210 /* XCRemoteSwiftPackageReference "soundpipeaudiokit" */,
+				F63621342ECBFE9F00A409FC /* XCRemoteSwiftPackageReference "Waveform" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F6A61ECD2EAB8598009A1210 /* Products */;
@@ -585,6 +589,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F63621342ECBFE9F00A409FC /* XCRemoteSwiftPackageReference "Waveform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/Waveform";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
 		F6A61EF62EAB8651009A1210 /* XCRemoteSwiftPackageReference "soundpipeaudiokit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AudioKit/soundpipeaudiokit";
@@ -596,6 +608,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F63621352ECBFE9F00A409FC /* Waveform */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F63621342ECBFE9F00A409FC /* XCRemoteSwiftPackageReference "Waveform" */;
+			productName = Waveform;
+		};
 		F6A61EF72EAB8651009A1210 /* SoundpipeAudioKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F6A61EF62EAB8651009A1210 /* XCRemoteSwiftPackageReference "soundpipeaudiokit" */;

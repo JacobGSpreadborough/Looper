@@ -8,9 +8,12 @@
 import Combine
 import AudioKit
 import Foundation
+import Waveform
+import AVFAudio
 
 class Looper: ObservableObject {
     private let engine = AudioEngine()
+    var samples: SampleBuffer
     let MINIMUM_LOOP_LENGTH: TimeInterval = 1
     var player: AudioPlayer!
     var speedPitch: TimePitch!
@@ -27,12 +30,15 @@ class Looper: ObservableObject {
     @Published var isPlaying: Bool = false
     @Published var isLooping: Bool = false
     @Published var duration: Double
+    
     // TODO select song from settings menu
-    let fileName:String = "Miles Davis Quintet - It Never Entered My Mind.mp3"
+    let fileName:String = "Miles Davis Quintet - It Never Entered My Mind"
     
     init() {
-        let fileURL = URL(fileURLWithPath: Bundle.main.path(forResource: fileName, ofType: nil)!)
-        player = AudioPlayer(url: fileURL, buffered: true)
+        
+        let file = try! AVAudioFile(forReading: Bundle.main.url(forResource: fileName, withExtension: "mp3")!)
+        
+        player = AudioPlayer(file: file, buffered: true)
         duration = player.duration
         player.isEditTimeEnabled = true;
         player.isLooping = false
@@ -51,6 +57,8 @@ class Looper: ObservableObject {
         
         engine.output = speedPitch
         try!engine.start()
+        
+        samples = SampleBuffer(samples: file.floatChannelData()![0])
     }
     
     open func changePitch(steps: AUValue) {
