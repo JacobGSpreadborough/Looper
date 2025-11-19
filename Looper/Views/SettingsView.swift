@@ -22,27 +22,27 @@ struct SettingsView: View {
                 .font(.title)
                 .padding()
             HStack{
-                EQSlider(EQ: $EQ60, label: "60Hz", min: -40,max:40)
+                EQSlider(EQ: $EQ60, label: "60Hz", range: -40...40)
                     .onChange(of: EQ60, {
                         looper.setEQ60(gain: EQ60)
                     })
-                EQSlider(EQ: $EQ150, label: "150Hz",min: -20,max: 20)
+                EQSlider(EQ: $EQ150, label: "150Hz", range: -20...20)
                     .onChange(of: EQ150, {
                         looper.setEQ150(gain: EQ150)
                     })
-                EQSlider(EQ: $EQ400, label: "400Hz",min: -20,max: 20)
+                EQSlider(EQ: $EQ400, label: "400Hz", range: -20...20)
                     .onChange(of: EQ400, {
                         looper.setEQ400(gain: EQ400)
                     })
-                EQSlider(EQ: $EQ1k, label: "1kHz",min: -20,max: 20)
+                EQSlider(EQ: $EQ1k, label: "1kHz", range: -20...20)
                     .onChange(of: EQ1k, {
                         looper.setEQ1k(gain: EQ1k)
                     })
-                EQSlider(EQ: $EQ2k4, label: "2k4Hz",min: -20,max: 20)
+                EQSlider(EQ: $EQ2k4, label: "2k4Hz", range: -20...20)
                     .onChange(of: EQ2k4, {
                         looper.setEQ2k4(gain: EQ2k4)
                     })
-                EQSlider(EQ: $EQ10k, label: "10kHz",min: -40,max: 40)
+                EQSlider(EQ: $EQ10k, label: "10kHz",range: -40...40)
                     .onChange(of: EQ10k, {
                         looper.setEQ10k(gain: EQ10k)
                     })
