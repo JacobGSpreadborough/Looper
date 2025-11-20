@@ -33,7 +33,7 @@ class Looper {
     var duration: Double
     
     // TODO select song from settings menu
-    let fileName:String = "stevie"
+    let fileName:String = "Miles Davis Quintet - It Never Entered My Mind"
     
     init() {
         
@@ -133,7 +133,6 @@ class Looper {
     }
 
     open func seek(time: TimeInterval) {
-        print("seeking to \(time)")
         if(time < player.editStartTime) {
             player.editStartTime = time
         }

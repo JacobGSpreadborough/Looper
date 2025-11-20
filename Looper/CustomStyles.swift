@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct CustomMainButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
       configuration.label
@@ -16,7 +17,7 @@ struct CustomMainButtonStyle: ButtonStyle {
       .clipShape(RoundedRectangle(cornerRadius: 10))
   }
 }
-
+// UNUSED
 struct CustomSecondaryButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
       configuration.label

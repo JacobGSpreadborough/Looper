@@ -40,6 +40,7 @@ struct ContentView: View {
                 VStack{
                     Text("\(looper.fileName)")
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding()
                     ZStack{
                         Waveform(samples: looper.samples)
@@ -86,7 +87,7 @@ struct ContentView: View {
                             }
                         })
                     }
-                    .padding(.vertical)
+                    //.padding(.vertical)
                     
                     HStack{
                         // seek back 5 seconds
@@ -195,7 +196,8 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "backward.end")
                         }
-                        .buttonStyle(CustomSecondaryButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
+                        /*
                         // move start of loop forward 1 second
                         Button(action: {
                             let stopTime = looper.player.currentTime
@@ -208,6 +210,7 @@ struct ContentView: View {
                             Image(systemName: "forward.end")
                         }
                         .buttonStyle(CustomSecondaryButtonStyle())
+                         */
                         // set loop start
                         Button(action: {
                             // the time that this takes is proportional to the length of the loop...
@@ -251,6 +254,7 @@ struct ContentView: View {
                                 .rotationEffect(Angle(degrees: 180))
                         }
                         .buttonStyle(CustomMainButtonStyle())
+                        /*
                         // move end of loop back 1 second
                         Button(action: {
                             let stopTime = looper.player.currentTime
@@ -263,6 +267,7 @@ struct ContentView: View {
                             Image(systemName: "backward.end")
                         }
                         .buttonStyle(CustomSecondaryButtonStyle())
+                         */
                         // move end of loop forward 1 second
                         Button(action: {
                             let stopTime = looper.player.currentTime
@@ -274,7 +279,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "forward.end")
                         }
-                        .buttonStyle(CustomSecondaryButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
                     }
                     ZStack{
                         // TODO add waveform over the loop, it takes sample numbers rather that TimeIntervals
