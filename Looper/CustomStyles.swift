@@ -7,11 +7,21 @@
 
 import SwiftUI
 
-struct CustomButtonStyle: ButtonStyle {
+struct CustomMainButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
       configuration.label
       .foregroundColor(.white)
-      .padding()
+      .frame(width: 45, height: 45)
+      .background(Color.blue)
+      .clipShape(RoundedRectangle(cornerRadius: 10))
+  }
+}
+
+struct CustomSecondaryButtonStyle: ButtonStyle {
+  func makeBody(configuration: Configuration) -> some View {
+      configuration.label
+      .foregroundColor(.white)
+      .frame(width: 40, height: 40)
       .background(Color.blue)
       .clipShape(RoundedRectangle(cornerRadius: 10))
   }

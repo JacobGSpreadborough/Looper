@@ -99,7 +99,7 @@ struct ContentView: View {
                         }) {
                             Text("-5s")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
                         // seek back 1 second
                         // TODO actually seeks back about 0.97 seconds
                         Button(action: {
@@ -111,14 +111,14 @@ struct ContentView: View {
                         }) {
                             Text("-1s")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
                         // play/pause
                         Button(action: {
                             looper.isPlaying ? looper.pause():looper.play()
                         }){
                             Image(systemName: "\(looper.isPlaying ? "pause" : "play")")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
                         // seek forward 1 second
                         // TODO actually seeks forward about 0.97 seconds
                         Button(action: {
@@ -130,7 +130,7 @@ struct ContentView: View {
                         }) {
                             Text("+1s")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
                         // seek forward 5 seconds
                         Button(action: {
                             wasPlaying = looper.isPlaying
@@ -141,13 +141,14 @@ struct ContentView: View {
                         }) {
                             Text("+5s")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
                     }
                 }
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 // speed and pitch
+                // TODO add pitch shift by cents
                 VStack {
                     Text("Speed: \((speed * 100), specifier: "%0.0f")%")
                         .monospacedDigit()
@@ -179,7 +180,6 @@ struct ContentView: View {
                 .background(Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 // loop controls
-                // TODO the buttons here are too wide
                 VStack{
                     Text("Loop")
                         .padding()
@@ -195,7 +195,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "backward.end")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomSecondaryButtonStyle())
                         // move start of loop forward 1 second
                         Button(action: {
                             let stopTime = looper.player.currentTime
@@ -207,7 +207,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "forward.end")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomSecondaryButtonStyle())
                         // set loop start
                         Button(action: {
                             // the time that this takes is proportional to the length of the loop...
@@ -223,7 +223,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "arrow.uturn.right")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
                         
                         Button(action: {
                             let stopTime = looper.player.currentTime
@@ -236,7 +236,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "\(looper.isLooping ? "repeat" : "repeat.badge.xmark")")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
                         // set loop end
                         Button(action: {
                             // using either loop button enables looping
@@ -250,7 +250,7 @@ struct ContentView: View {
                             Image(systemName: "arrow.uturn.right")
                                 .rotationEffect(Angle(degrees: 180))
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomMainButtonStyle())
                         // move end of loop back 1 second
                         Button(action: {
                             let stopTime = looper.player.currentTime
@@ -262,7 +262,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "backward.end")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomSecondaryButtonStyle())
                         // move end of loop forward 1 second
                         Button(action: {
                             let stopTime = looper.player.currentTime
@@ -274,7 +274,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "forward.end")
                         }
-                        .buttonStyle(CustomButtonStyle())
+                        .buttonStyle(CustomSecondaryButtonStyle())
                     }
                     ZStack{
                         // TODO add waveform over the loop, it takes sample numbers rather that TimeIntervals
@@ -308,11 +308,11 @@ struct ContentView: View {
                                 }
                             }
                         )
-                        .padding(.vertical)
+                        //.padding(.vertical)
+                        .padding(.horizontal)
                         .disabled(!looper.isLooping)
                     }
                 }
-                .padding()
                 .background(Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 // volume
