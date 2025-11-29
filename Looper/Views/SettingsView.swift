@@ -7,13 +7,14 @@
 
 import SwiftUI
 import AudioKit
+import MediaPlayer
 
 struct SettingsView: View {
     var body: some View {
         NavigationStack{
             List{
                 // TODO add icons to make these look nice
-                NavigationLink("Import Song", destination: SongSelectionView())
+                NavigationLink("Import Audio", destination: SongSelectionView())
                 NavigationLink("Equalization", destination:
                                 EQView())
             }
@@ -89,20 +90,31 @@ struct EQView: View{
 }
 
 struct SongSelectionView: View {
-    var body: some View { 
+    @State private var musicPickerShowing: Bool = false
+    @State private var documentPickerShowing: Bool = false
+    @State var songAppleMusic: MPMediaItem?
+    @State var document: URL?
+    var body: some View {
         List{
             CustomListButton(image: "music.note.square.stack", text: "Apple Music",action: {
-                    
+                    musicPickerShowing = true
                 })
             CustomListButton(image: "folder", text: "Documents", action: {
-                
+                documentPickerShowing = true
             })
             CustomListButton(image: "camera", text: "Videos", action: {
-                
+                // TODO implement this
             })
             CustomListButton(image: "waveform.mid", text: "Voice memos", action: {
-                
+                // TODO implement this
             })
+        }
+        .navigationTitle("Import Audio")
+        .sheet(isPresented: $musicPickerShowing) {
+            MusicPicker(song: $songAppleMusic)
+        }
+        .sheet(isPresented: $documentPickerShowing) {
+            DocumentPicker(song: $document)
         }
     }
 }
