@@ -9,6 +9,20 @@ import SwiftUI
 import AudioKit
 
 struct SettingsView: View {
+    var body: some View {
+        NavigationStack{
+            List{
+                // TODO add icons to make these look nice
+                NavigationLink("Import Song", destination: SongSelectionView())
+                NavigationLink("Equalization", destination:
+                                EQView())
+            }
+            .navigationTitle("Settings")
+        }
+    }
+}
+
+struct EQView: View{
     @State var EQ60: AUValue = 0;
     @State var EQ150: AUValue = 0;
     @State var EQ400: AUValue = 0;
@@ -17,10 +31,6 @@ struct SettingsView: View {
     @State var EQ10k: AUValue = 0;
     var body: some View {
         VStack{
-            // TODO put this at the top
-            Text("Settings")
-                .font(.title)
-                .padding()
             HStack{
                 EQSlider(EQ: $EQ60, label: "60Hz", range: -40...40)
                     .onChange(of: EQ60, {
@@ -60,6 +70,7 @@ struct SettingsView: View {
                 EQ10k = looper.EQ10k.gain
             }
         }
+        .navigationTitle("Equalization")
         .frame(height: 300)
         .padding()
         Button(action: {
@@ -74,6 +85,41 @@ struct SettingsView: View {
         }
         .frame(height:100,alignment: .bottom)
         .padding()
+    }
+}
+
+struct SongSelectionView: View {
+    var body: some View { 
+        List{
+            CustomListButton(image: "music.note.square.stack", text: "Apple Music",action: {
+                    
+                })
+            CustomListButton(image: "folder", text: "Documents", action: {
+                
+            })
+            CustomListButton(image: "camera", text: "Videos", action: {
+                
+            })
+            CustomListButton(image: "waveform.mid", text: "Voice memos", action: {
+                
+            })
+        }
+    }
+}
+
+struct CustomListButton: View{
+    var image: String
+    var text: String
+    var action: () -> Void
+    var body: some View {
+        Button(
+            action: action,
+            label: {
+                HStack{
+                    Image(systemName: image)
+                    Text(text)
+            }
+        })
     }
 }
 

@@ -12,7 +12,7 @@ struct CustomMainButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
       configuration.label
       .foregroundColor(.white)
-      .frame(width: 45, height: 45)
+      .frame(width: 50, height: 50)
       .background(Color.blue)
       .clipShape(RoundedRectangle(cornerRadius: 10))
   }

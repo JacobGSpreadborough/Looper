@@ -44,9 +44,11 @@ struct ContentView: View {
                         .padding()
                     ZStack{
                         Waveform(samples: looper.samples)
+                    
                             .foregroundColor(.blue)
+                            .padding(.vertical)
                             .opacity(0.25)
-                            .frame(width: 180)
+                            .frame(width: 175)
                         Slider(
                             value: $currentTime,
                             in: 0...looper.duration,
@@ -287,6 +289,7 @@ struct ContentView: View {
                                  start: looper.loopStartSample,
                                  length: looper.loopLengthSample)
                         .foregroundColor(.blue)
+                        .padding(.vertical)
                         .opacity(0.25)
                         .frame(width:175)
                         Slider(
