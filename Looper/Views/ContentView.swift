@@ -10,7 +10,8 @@ import SoundpipeAudioKit
 import AudioKit
 import Waveform
 
-var looper = Looper()
+let fileName:String = "Dire Straits - Romeo and Juliet"
+var looper = Looper(url: Bundle.main.url(forResource: fileName, withExtension: "mp3")!)
 
 struct ContentView: View {
     @State private var currentTime: TimeInterval = 0
@@ -65,7 +66,6 @@ struct ContentView: View {
                             // when you release the slider it will call this twice, first
                             // with editing = false, then with editing = true
                             onEditingChanged: { editing in
-                                print("editing:\(editing)")
                                 if(editing) {
                                     wasPlaying = looper.isPlaying
                                     sliderUpdating = false
@@ -343,8 +343,4 @@ struct ContentView: View {
             .padding()
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

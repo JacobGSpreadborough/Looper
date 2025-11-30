@@ -38,7 +38,12 @@ struct MusicPicker: UIViewControllerRepresentable {
                 print("song selection failed")
                 return
             }
-            print("selected: \(song)")
+            if let url = song.assetURL {
+                if(url.startAccessingSecurityScopedResource()){
+                    looper = Looper(url: url)
+                }
+                url.stopAccessingSecurityScopedResource()
+            }
             mediaPicker.dismiss(animated:true)
         }
         

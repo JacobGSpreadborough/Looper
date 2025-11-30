@@ -8,6 +8,7 @@
 import AudioKit
 import Waveform
 import AVFAudio
+import MediaPlayer
 
 class Looper {
     private let engine = AudioEngine()
@@ -32,12 +33,16 @@ class Looper {
     var isLooping: Bool = false
     var duration: Double
     
-    // TODO select song from settings menu
-    let fileName:String = "Miles Davis Quintet - It Never Entered My Mind"
+    var fileName: String
+    var file: AVAudioFile
     
-    init() {
+    init(url: URL) {
         
-        let file = try! AVAudioFile(forReading: Bundle.main.url(forResource: fileName, withExtension: "mp3")!)
+        print("looper initializing")
+        
+        file = try! AVAudioFile(forReading: url)
+        
+        fileName = url.lastPathComponent
         
         player = AudioPlayer(file: file, buffered: true)
         duration = player.duration

@@ -35,9 +35,22 @@
 		F6A61EE32EAB8599009A1210 /* LooperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LooperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F6D35C7C2EDBD59A009D40AA /* Exceptions for "Looper" folder in "Looper" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F6A61ECB2EAB8598009A1210 /* Looper */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F6A61ECE2EAB8598009A1210 /* Looper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F6D35C7C2EDBD59A009D40AA /* Exceptions for "Looper" folder in "Looper" target */,
+			);
 			path = Looper;
 			sourceTree = "<group>";
 		};
@@ -417,7 +430,10 @@
 				DEVELOPMENT_TEAM = WUF553T692;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Looper/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Please allow access to your music library";
+				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "Please allow access to your documents";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -451,7 +467,10 @@
 				DEVELOPMENT_TEAM = WUF553T692;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Looper/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Please allow access to your music library";
+				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "Please allow access to your documents";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

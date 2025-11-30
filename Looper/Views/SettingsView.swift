@@ -92,8 +92,11 @@ struct EQView: View{
 struct SongSelectionView: View {
     @State private var musicPickerShowing: Bool = false
     @State private var documentPickerShowing: Bool = false
-    @State var songAppleMusic: MPMediaItem?
+    @State private var videoPickerShowing: Bool = false
+    // currently unused
+    @State var song: MPMediaItem?
     @State var document: URL?
+    @State var video: UIImage?
     var body: some View {
         List{
             CustomListButton(image: "music.note.square.stack", text: "Apple Music",action: {
@@ -103,7 +106,7 @@ struct SongSelectionView: View {
                 documentPickerShowing = true
             })
             CustomListButton(image: "camera", text: "Videos", action: {
-                // TODO implement this
+                videoPickerShowing = true
             })
             CustomListButton(image: "waveform.mid", text: "Voice memos", action: {
                 // TODO implement this
@@ -111,11 +114,14 @@ struct SongSelectionView: View {
         }
         .navigationTitle("Import Audio")
         .sheet(isPresented: $musicPickerShowing) {
-            MusicPicker(song: $songAppleMusic)
+            MusicPicker(song: $song)
         }
         .sheet(isPresented: $documentPickerShowing) {
-            DocumentPicker(song: $document)
+            DocumentPicker(documentURL: $document)
         }
+        .sheet(isPresented: $videoPickerShowing, content: {
+            VideoPicker(video: $video)
+        })
     }
 }
 

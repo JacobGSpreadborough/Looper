@@ -11,7 +11,7 @@ internal import UniformTypeIdentifiers
 
 struct DocumentPicker: UIViewControllerRepresentable {
     
-    @Binding var song: URL?
+    @Binding var documentURL: URL?
     
     func makeUIViewController(context: Context) -> some UIDocumentPickerViewController {
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.audio])
@@ -35,11 +35,19 @@ struct DocumentPicker: UIViewControllerRepresentable {
         }
         
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            guard let song = urls.first else {
+            guard let documentURL = urls.first else {
                 print("document selection failed")
                 return
             }
-            print("selected: \(song)")
+            
+            if (documentURL.startAccessingSecurityScopedResource()) {
+                looper = Looper(url: documentURL)
+            } else {
+                print("access error")
+                return
+            }
+            
+            documentURL.stopAccessingSecurityScopedResource()
         }
         
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
