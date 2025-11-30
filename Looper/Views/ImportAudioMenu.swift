@@ -18,8 +18,8 @@ struct ImportAudioMenu: View {
     var body: some View {
         Menu("Import Audio"){
             CustomListButton(image: "music.note.square.stack", text: "Apple Music",action: {
-                    musicPickerShowing = true
-                })
+                musicPickerShowing = true
+            })
             CustomListButton(image: "folder", text: "Documents", action: {
                 documentPickerShowing = true
             })
@@ -170,8 +170,6 @@ struct VideoPicker: UIViewControllerRepresentable {
         
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated:true)
-            guard (results.first?.itemProvider) != nil else { return }
-            // TODO get audio from videos
         }
     }
 }

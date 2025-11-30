@@ -41,6 +41,7 @@ class Looper {
         print("looper initializing")
         
         player = AudioPlayer()
+        
         loadAudio(url: url)
         
         player.isEditTimeEnabled = true;
@@ -65,7 +66,7 @@ class Looper {
         print("loading: \(url.absoluteString)")
         
         // TODO provide error handling here
-        player.stop()
+        stop()
         try!player.load(url: url, buffered: true)
         duration = player.duration
         
