@@ -14,6 +14,9 @@ let fileName:String = "Dire Straits - Romeo and Juliet"
 var looper = Looper(url: Bundle.main.url(forResource: fileName, withExtension: "mp3")!)
 
 struct ContentView: View {
+    @State var musicPickerShowing: Bool = false
+    @State var documentPickerShowing: Bool = false
+    @State var videoPickerShowing: Bool = false
     @State private var currentTime: TimeInterval = 0
     @State private var sliderUpdating: Bool = true;
     @State private var volume: Float = 0.5;
@@ -24,19 +27,6 @@ struct ContentView: View {
         NavigationView {
             // main stack
             VStack {
-                HStack(alignment: .top){
-                    // TODO these buttons are bad
-                    NavigationLink(destination: HelpView()) {
-                        Text("Help")
-                            .foregroundStyle(Color(.blue))
-                    }
-                    .frame(width: 150,alignment: .leading)
-                    NavigationLink(destination: SettingsView()) {
-                        Text("Settings")
-                            .foregroundStyle(Color(.blue))
-                    }
-                    .frame(width: 150,alignment: .trailing)
-                }
                 // song navigation
                 VStack{
                     Text("\(looper.fileName)")
@@ -340,7 +330,30 @@ struct ContentView: View {
                 .background(Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             }
+            .toolbarRole(.navigationStack)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading, content: {
+                    NavigationLink(destination: HelpView(), label: {
+                        Image(systemName: "info.circle")
+                    })
+                })
+                ToolbarItem(placement: .subtitle, content: {
+                    ImportAudioMenu(musicPickerShowing: $musicPickerShowing, documentPickerShowing: $documentPickerShowing, videoPickerShowing: $videoPickerShowing)
+                })
+                ToolbarItem(placement: .topBarTrailing, content: {
+                    NavigationLink(destination: SettingsView(), label: {
+                        Image(systemName: "gear")
+                    })
+                })
+            }
             .padding()
         }
+        .sheet(isPresented: $documentPickerShowing, content:{DocumentPicker()})
+        .sheet(isPresented: $musicPickerShowing, content: {MusicPicker()})
+        .sheet(isPresented: $videoPickerShowing, content: {VideoPicker()})
     }
+}
+
+#Preview {
+    ContentView()
 }

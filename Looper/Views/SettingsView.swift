@@ -13,10 +13,12 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack{
             List{
-                // TODO add icons to make these look nice
-                NavigationLink("Import Audio", destination: SongSelectionView())
-                NavigationLink("Equalization", destination:
-                                EQView())
+                NavigationLink(destination: EQView(), label: {
+                    HStack{
+                        Image(systemName: "slider.vertical.3")
+                        Text("Equalization")
+                    }
+                })
             }
             .navigationTitle("Settings")
         }
@@ -89,57 +91,7 @@ struct EQView: View{
     }
 }
 
-struct SongSelectionView: View {
-    @State private var musicPickerShowing: Bool = false
-    @State private var documentPickerShowing: Bool = false
-    @State private var videoPickerShowing: Bool = false
-    // currently unused
-    @State var song: MPMediaItem?
-    @State var document: URL?
-    @State var video: UIImage?
-    var body: some View {
-        List{
-            CustomListButton(image: "music.note.square.stack", text: "Apple Music",action: {
-                    musicPickerShowing = true
-                })
-            CustomListButton(image: "folder", text: "Documents", action: {
-                documentPickerShowing = true
-            })
-            CustomListButton(image: "camera", text: "Videos", action: {
-                videoPickerShowing = true
-            })
-            CustomListButton(image: "waveform.mid", text: "Voice memos", action: {
-                // TODO implement this
-            })
-        }
-        .navigationTitle("Import Audio")
-        .sheet(isPresented: $musicPickerShowing) {
-            MusicPicker(song: $song)
-        }
-        .sheet(isPresented: $documentPickerShowing) {
-            DocumentPicker(documentURL: $document)
-        }
-        .sheet(isPresented: $videoPickerShowing, content: {
-            VideoPicker(video: $video)
-        })
-    }
-}
 
-struct CustomListButton: View{
-    var image: String
-    var text: String
-    var action: () -> Void
-    var body: some View {
-        Button(
-            action: action,
-            label: {
-                HStack{
-                    Image(systemName: image)
-                    Text(text)
-            }
-        })
-    }
-}
 
 #Preview {
     SettingsView()
