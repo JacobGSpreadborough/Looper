@@ -12,10 +12,10 @@ import MediaPlayer
 
 class Looper {
     private let engine = AudioEngine()
-    var samples: SampleBuffer
+    var samples: SampleBuffer!
     // start point and duration in samples rather than seconds
-    var loopStartSample: Int
-    var loopLengthSample: Int
+    var loopStartSample: Int!
+    var loopLengthSample: Int!
     // prevent loops from being too short
     let MINIMUM_LOOP_LENGTH: TimeInterval = 1
     var player: AudioPlayer!
@@ -31,24 +31,22 @@ class Looper {
     // we do not start playing automatically
     var isPlaying: Bool = false
     var isLooping: Bool = false
-    var duration: Double
+    var duration: Double!
     
-    var fileName: String
-    var file: AVAudioFile
+    var fileName: String!
+    var file: AVAudioFile!
     
     init(url: URL) {
         
         print("looper initializing")
         
-        file = try! AVAudioFile(forReading: url)
+        player = AudioPlayer()
+        loadAudio(url: url)
         
-        fileName = url.lastPathComponent
-        
-        player = AudioPlayer(file: file, buffered: true)
-        duration = player.duration
         player.isEditTimeEnabled = true;
         player.isLooping = false
         player.volume = 0.5
+        
         EQ60 = LowShelfFilter(player, cutoffFrequency: 60, gain: 0)
         EQ150 = ParametricEQ(EQ60, centerFreq: 150, q: 1, gain: 0)
         EQ400 = ParametricEQ(EQ150, centerFreq: 400,  q: 1, gain: 0)
@@ -60,11 +58,23 @@ class Looper {
         
         engine.output = speedPitch
         try!engine.start()
+    }
+    
+    open func loadAudio(url: URL){
         
+        print("loading: \(url.absoluteString)")
+        
+        // TODO provide error handling here
+        player.stop()
+        try!player.load(url: url, buffered: true)
+        duration = player.duration
+        
+        file = try! AVAudioFile(forReading: url)
         samples = SampleBuffer(samples: file.floatChannelData()![0])
         loopStartSample = Int(player.editStartTime * player.outputFormat.sampleRate)
         loopLengthSample = Int((player.editEndTime - player.editStartTime) * player.outputFormat.sampleRate)
         
+        fileName = url.lastPathComponent
     }
     
     open func changePitch(steps: AUValue) {

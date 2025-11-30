@@ -51,6 +51,8 @@ struct CustomListButton: View{
 }
 
 struct DocumentPicker: UIViewControllerRepresentable {
+    
+    @Binding var looper: Looper
 
     func makeUIViewController(context: Context) -> some UIDocumentPickerViewController {
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.audio])
@@ -80,7 +82,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
             }
             
             if (documentURL.startAccessingSecurityScopedResource()) {
-                looper = Looper(url: documentURL)
+                parent.looper.loadAudio(url: documentURL)
             } else {
                 print("access error")
                 return
@@ -98,7 +100,9 @@ struct DocumentPicker: UIViewControllerRepresentable {
 
 
 struct MusicPicker: UIViewControllerRepresentable {
-
+    
+    @Binding var looper: Looper
+    
     func makeUIViewController(context: Context) -> some MPMediaPickerController {
         let picker = MPMediaPickerController(mediaTypes: .music)
         picker.allowsPickingMultipleItems = false
@@ -126,7 +130,7 @@ struct MusicPicker: UIViewControllerRepresentable {
             }
             if let url = song.assetURL {
                 if(url.startAccessingSecurityScopedResource()){
-                    looper = Looper(url: url)
+                    parent.looper = Looper(url: url)
                 }
                 url.stopAccessingSecurityScopedResource()
             }

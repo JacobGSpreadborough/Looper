@@ -11,9 +11,9 @@ import AudioKit
 import Waveform
 
 let fileName:String = "Dire Straits - Romeo and Juliet"
-var looper = Looper(url: Bundle.main.url(forResource: fileName, withExtension: "mp3")!)
 
 struct ContentView: View {
+    @State var looper = Looper(url: Bundle.main.url(forResource: fileName, withExtension: "mp3")!)
     @State var musicPickerShowing: Bool = false
     @State var documentPickerShowing: Bool = false
     @State var videoPickerShowing: Bool = false
@@ -29,7 +29,7 @@ struct ContentView: View {
             VStack {
                 // song navigation
                 VStack{
-                    Text("\(looper.fileName)")
+                    Text("\(looper.fileName ?? "")")
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding()
@@ -156,6 +156,7 @@ struct ContentView: View {
                     .onChange(of: speed, {
                         looper.changeSpeed(percent: speed)
                     })
+                    
                     //.padding()
                     Stepper(label: {
                         Text("Transpose: \(looper.pitch,specifier: "%0.0f") step\(stringPlural(number: looper.pitch))")
@@ -341,15 +342,15 @@ struct ContentView: View {
                     ImportAudioMenu(musicPickerShowing: $musicPickerShowing, documentPickerShowing: $documentPickerShowing, videoPickerShowing: $videoPickerShowing)
                 })
                 ToolbarItem(placement: .topBarTrailing, content: {
-                    NavigationLink(destination: SettingsView(), label: {
+                    NavigationLink(destination: SettingsView(looper: $looper), label: {
                         Image(systemName: "gear")
                     })
                 })
             }
             .padding()
         }
-        .sheet(isPresented: $documentPickerShowing, content:{DocumentPicker()})
-        .sheet(isPresented: $musicPickerShowing, content: {MusicPicker()})
+        .sheet(isPresented: $documentPickerShowing, content:{DocumentPicker(looper: $looper)})
+        .sheet(isPresented: $musicPickerShowing, content: {MusicPicker(looper: $looper)})
         .sheet(isPresented: $videoPickerShowing, content: {VideoPicker()})
     }
 }
