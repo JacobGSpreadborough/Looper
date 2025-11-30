@@ -128,6 +128,7 @@ struct MusicPicker: UIViewControllerRepresentable {
                 print("song selection failed")
                 return
             }
+            
             if let url = song.assetURL {
                 if(url.startAccessingSecurityScopedResource()){
                     parent.looper = Looper(url: url)
