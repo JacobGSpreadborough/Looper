@@ -16,20 +16,20 @@ struct ImportAudioMenu: View {
     @Binding var documentPickerShowing: Bool
     @Binding var videoPickerShowing: Bool
     var body: some View {
-        Menu("Import Audio"){
-            CustomListButton(image: "music.note.square.stack", text: "Apple Music",action: {
-                musicPickerShowing = true
-            })
-            CustomListButton(image: "folder", text: "Documents", action: {
-                documentPickerShowing = true
-            })
-            CustomListButton(image: "camera", text: "Videos", action: {
-                videoPickerShowing = true
-            })
-            CustomListButton(image: "waveform.mid", text: "Voice memos", action: {
-                // TODO implement this
-            })
-            Button("Cancel"){}
+        Menu("Import",systemImage:"plus"){
+                CustomListButton(image: "music.note.square.stack", text: "Apple Music",action: {
+                    musicPickerShowing = true
+                })
+                CustomListButton(image: "folder", text: "Documents", action: {
+                    documentPickerShowing = true
+                })
+                CustomListButton(image: "camera", text: "Videos", action: {
+                    videoPickerShowing = true
+                })
+                CustomListButton(image: "waveform.mid", text: "Voice memos", action: {
+                    // TODO implement this
+                })
+                Button("Cancel"){}
         }
     }
 }
