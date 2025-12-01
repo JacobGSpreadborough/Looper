@@ -105,6 +105,7 @@ struct MusicPicker: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> some MPMediaPickerController {
         let picker = MPMediaPickerController(mediaTypes: .music)
+        
         picker.allowsPickingMultipleItems = false
         picker.delegate = context.coordinator
         return picker
@@ -129,12 +130,8 @@ struct MusicPicker: UIViewControllerRepresentable {
                 return
             }
             
-            if let url = song.assetURL {
-                if(url.startAccessingSecurityScopedResource()){
-                    parent.looper = Looper(url: url)
-                }
-                url.stopAccessingSecurityScopedResource()
-            }
+            parent.looper.loadAudio(song: song)
+            
             mediaPicker.dismiss(animated:true)
         }
         

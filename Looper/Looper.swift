@@ -7,6 +7,7 @@
 
 import AudioKit
 import Waveform
+import Foundation
 import AVFAudio
 import MediaPlayer
 
@@ -34,7 +35,6 @@ class Looper {
     var duration: Double!
     
     var fileName: String!
-    var file: AVAudioFile!
     
     init(url: URL) {
         
@@ -44,6 +44,10 @@ class Looper {
         
         loadAudio(url: url)
         
+        attachPlayer()
+    }
+    
+    private func attachPlayer() {
         player.isEditTimeEnabled = true;
         player.isLooping = false
         player.volume = 0.5
@@ -61,21 +65,38 @@ class Looper {
         try!engine.start()
     }
     
-    open func loadAudio(url: URL){
-        
-        print("loading: \(url.absoluteString)")
-        
-        // TODO provide error handling here
+    open func loadAudio(file: AVAudioFile){
         stop()
-        try!player.load(url: url, buffered: true)
-        duration = player.duration
         
-        file = try! AVAudioFile(forReading: url)
+        if(player.outputFormat.sampleRate != file.fileFormat.sampleRate) {
+            player = AudioPlayer(file: file, buffered: true)
+            attachPlayer()
+        } else {
+            try!player.load(file: file,buffered: true)
+        }
+        
+        duration = player.duration
+
         samples = SampleBuffer(samples: file.floatChannelData()![0])
         loopStartSample = Int(player.editStartTime * player.outputFormat.sampleRate)
         loopLengthSample = Int((player.editEndTime - player.editStartTime) * player.outputFormat.sampleRate)
         
+        // TODO get filename from file
+        fileName = file.url.lastPathComponent
+    }
+    
+    open func loadAudio(url: URL){
+        
+        loadAudio(file: try!AVAudioFile(forReading: url))
+        
         fileName = url.lastPathComponent
+    }
+    
+    open func loadAudio(song: MPMediaItem) {
+        
+        loadAudio(url: song.assetURL!)
+    
+        fileName = song.albumArtist! + " - " + song.title!
     }
     
     open func changePitch(steps: AUValue) {
