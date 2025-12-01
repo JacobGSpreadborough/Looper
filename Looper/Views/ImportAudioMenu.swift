@@ -52,11 +52,11 @@ struct CustomListButton: View{
 
 struct DocumentPicker: UIViewControllerRepresentable {
     
-    @Binding var looper: Looper
+    @Binding var savedSongs: [Song]
 
     func makeUIViewController(context: Context) -> some UIDocumentPickerViewController {
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.audio])
-        documentPicker.allowsMultipleSelection = false
+        documentPicker.allowsMultipleSelection = true
         documentPicker.delegate = context.coordinator
         return documentPicker
     }
@@ -76,19 +76,21 @@ struct DocumentPicker: UIViewControllerRepresentable {
         }
         
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            guard let documentURL = urls.first else {
-                print("document selection failed")
-                return
-            }
             
-            if (documentURL.startAccessingSecurityScopedResource()) {
-                parent.looper.loadAudio(url: documentURL)
-            } else {
-                print("access error")
-                return
+            for url in urls {
+                if(url.startAccessingSecurityScopedResource()) {
+                    let song = Song(title: url.lastPathComponent,
+                                    artist: "User",
+                                    file: try!AVAudioFile(forReading: url),
+                                    url: url,
+                                    image: nil)
+                    parent.savedSongs.append(song)
+                } else {
+                    print("access error")
+                    return
+                }
+                url.stopAccessingSecurityScopedResource()
             }
-            
-            documentURL.stopAccessingSecurityScopedResource()
         }
         
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
@@ -101,12 +103,12 @@ struct DocumentPicker: UIViewControllerRepresentable {
 
 struct MusicPicker: UIViewControllerRepresentable {
     
-    @Binding var looper: Looper
+    @Binding var savedSongs: [Song]
     
     func makeUIViewController(context: Context) -> some MPMediaPickerController {
         let picker = MPMediaPickerController(mediaTypes: .music)
         
-        picker.allowsPickingMultipleItems = false
+        picker.allowsPickingMultipleItems = true
         picker.delegate = context.coordinator
         return picker
     }
@@ -123,15 +125,20 @@ struct MusicPicker: UIViewControllerRepresentable {
         init(_ parent: MusicPicker) {
             self.parent = parent
         }
-        
+        // TODO app crashes when selecting a song that isn't downloaded
         func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
-            guard let song = mediaItemCollection.items.first else {
-                print("song selection failed")
-                return
+            
+            for mediaItem in mediaItemCollection.items {
+                guard let url = mediaItem.assetURL else {
+                    print("song does not have URL")
+                    return
+                }
+                let song = Song(title: mediaItem.title ?? "Unknown",
+                                artist: mediaItem.artist ?? "Unknown",
+                                file: try!AVAudioFile(forReading:url),
+                                url: url, image: nil)
+                parent.savedSongs.append(song)
             }
-            
-            parent.looper.loadAudio(song: song)
-            
             mediaPicker.dismiss(animated:true)
         }
         

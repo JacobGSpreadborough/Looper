@@ -36,13 +36,13 @@ class Looper {
     
     var fileName: String!
     
-    init(url: URL) {
+    init(song: Song) {
         
         print("looper initializing")
         
         player = AudioPlayer()
         
-        loadAudio(url: url)
+        loadAudio(song: song)
         
         attachPlayer()
     }
@@ -65,38 +65,23 @@ class Looper {
         try!engine.start()
     }
     
-    open func loadAudio(file: AVAudioFile){
+    open func loadAudio(song: Song) {
         stop()
         
-        if(player.outputFormat.sampleRate != file.fileFormat.sampleRate) {
-            player = AudioPlayer(file: file, buffered: true)
+        if(player.outputFormat.sampleRate != song.file.fileFormat.sampleRate) {
+            player = AudioPlayer(file: song.file, buffered: true)
             attachPlayer()
         } else {
-            try!player.load(file: file,buffered: true)
+            try!player.load(file: song.file,buffered: true)
         }
         
         duration = player.duration
 
-        samples = SampleBuffer(samples: file.floatChannelData()![0])
+        samples = SampleBuffer(samples: song.file.floatChannelData()![0])
         loopStartSample = Int(player.editStartTime * player.outputFormat.sampleRate)
         loopLengthSample = Int((player.editEndTime - player.editStartTime) * player.outputFormat.sampleRate)
         
-        // TODO get filename from file
-        fileName = file.url.lastPathComponent
-    }
-    
-    open func loadAudio(url: URL){
-        
-        loadAudio(file: try!AVAudioFile(forReading: url))
-        
-        fileName = url.lastPathComponent
-    }
-    
-    open func loadAudio(song: MPMediaItem) {
-        
-        loadAudio(url: song.assetURL!)
-    
-        fileName = song.albumArtist! + " - " + song.title!
+        fileName = song.artist + " - " + song.title
     }
     
     open func changePitch(steps: AUValue) {
