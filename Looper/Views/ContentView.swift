@@ -8,17 +8,9 @@
 import SwiftUI
 import AVFAudio
 
-let demoFileName:String = "demo audio"
-let demoURL = Bundle.main.url(forResource: demoFileName, withExtension: "mp3")!
-let demoSong = Song(title: "track 0",
-                       artist: "demo",
-                       file: try!AVAudioFile(forReading: demoURL),
-                       url: demoURL,
-                       image: nil
-                    )
-
 struct ContentView: View {
-    @State var looper = Looper(song: demoSong)
+    // start looper with static demo audio
+    @State var looper = Looper(song: Song.demoSong)
     var body: some View {
         TabView{
             Tab("Looper", systemImage: "repeat") {

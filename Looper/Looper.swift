@@ -68,16 +68,20 @@ class Looper {
     open func loadAudio(song: Song) {
         stop()
         
-        if(player.outputFormat.sampleRate != song.file.fileFormat.sampleRate) {
-            player = AudioPlayer(file: song.file, buffered: true)
+        let url = resolveBookmark(from: song.bookmark!, isSecure: song.isSecure)!
+        let file = try!AVAudioFile(forReading: url)
+        
+        // TODO handle case of loading song with only 1 channel
+        if(player.outputFormat.sampleRate != file.fileFormat.sampleRate) {
+            player = AudioPlayer(file: file, buffered: true)
             attachPlayer()
         } else {
-            try!player.load(file: song.file,buffered: true)
+            try!player.load(file: file,buffered: true)
         }
         
         duration = player.duration
 
-        samples = SampleBuffer(samples: song.file.floatChannelData()![0])
+        samples = SampleBuffer(samples: file.floatChannelData()![0])
         loopStartSample = Int(player.editStartTime * player.outputFormat.sampleRate)
         loopLengthSample = Int((player.editEndTime - player.editStartTime) * player.outputFormat.sampleRate)
         

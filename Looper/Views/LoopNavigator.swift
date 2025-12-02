@@ -23,11 +23,11 @@ struct LoopNavigator: View {
             HStack{
                 // move start of loop back 1 second
                 Button(action: {
-                    let stopTime = looper.player.currentTime
+                    //let stopTime = looper.player.currentTime
                     wasPlaying = looper.isPlaying
                     looper.stop()
                     looper.setLoopStart(startTime: looper.player.editStartTime - 1)
-                    looper.seek(time: stopTime)
+                    //looper.seek(time: stopTime)
                     wasPlaying ? looper.play() : looper.pause()
                 }) {
                     Image(systemName: "backward.end")
@@ -106,11 +106,11 @@ struct LoopNavigator: View {
                  */
                 // move end of loop forward 1 second
                 Button(action: {
-                    let stopTime = looper.player.currentTime
+                    //let stopTime = looper.player.currentTime
                     wasPlaying = looper.isPlaying
                     looper.stop()
                     looper.setLoopEnd(endTime: looper.player.editEndTime + 1)
-                    looper.seek(time: stopTime)
+                    //looper.seek(time: stopTime)
                     wasPlaying ? looper.play() : looper.pause()
                 }) {
                     Image(systemName: "forward.end")
@@ -118,7 +118,6 @@ struct LoopNavigator: View {
                 .buttonStyle(CustomMainButtonStyle())
             }
             ZStack{
-                // TODO add waveform over the loop, it takes sample numbers rather that TimeIntervals
                 Waveform(samples: looper.samples,
                          start: looper.loopStartSample,
                          length: looper.loopLengthSample)

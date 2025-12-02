@@ -22,3 +22,23 @@ func stringPlural(number: Float) -> String {
     }
     return ""
 }
+
+func resolveBookmark(from bookmark: Data, isSecure: Bool) -> URL? {
+    var isStale = false
+    do{
+        let url = try URL(resolvingBookmarkData: bookmark, relativeTo: nil, bookmarkDataIsStale: &isStale)
+        // media files arent security scoped
+        if !isSecure {
+            return url
+        } else {
+            if(url.startAccessingSecurityScopedResource()) {
+                return url
+            } else {
+                print("could not access security scoped resource")
+                return nil
+            }
+        }
+    } catch {
+        fatalError("bookmark could not resolve to url")
+    }
+}

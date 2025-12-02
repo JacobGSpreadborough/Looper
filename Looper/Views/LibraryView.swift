@@ -6,37 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 import AVFAudio
 
-struct Song: Identifiable {
-    let title: String
-    let artist: String
-    let file: AVAudioFile
-    let url: URL
-    let image: Image?
-    var id: String{title}
-}
-
-struct Playlist: Identifiable {
-    let name: String
-    let songs: [Song]
-    var id: String{name}
-}
-
 struct LibraryView: View {
+    
     @Binding var looper: Looper
-    @State var savedSongs: [Song] = []
-    @State var playlists: [Playlist] = []
     @State var musicPickerShowing: Bool = false
     @State var documentPickerShowing: Bool = false
     @State var videoPickerShowing: Bool = false
+    
     var body: some View {
         NavigationStack{
             List{
-                NavigationLink(destination: AllSongs(savedSongs: $savedSongs, looper: $looper), label: {
+                NavigationLink(destination: AllSongs(looper: $looper), label: {
                     Label("All", systemImage: "line.horizontal.3")
                 })
-                NavigationLink(destination: Playlists(playlists: $playlists), label: {
+                NavigationLink(destination: Playlists(), label: {
                     Label("Playlists", systemImage: "music.note.square.stack")
                 })
                 NavigationLink(destination: FavoriteSongs(), label: {
@@ -45,10 +31,6 @@ struct LibraryView: View {
                 NavigationLink(destination: RecentSongs(), label: {
                     Label("Recents", systemImage: "clock")
                 })
-                ImportAudioMenu(musicPickerShowing: $musicPickerShowing, documentPickerShowing: $documentPickerShowing, videoPickerShowing: $videoPickerShowing)
-                    .sheet(isPresented: $documentPickerShowing, content:{DocumentPicker(savedSongs: $savedSongs)})
-                    .sheet(isPresented: $musicPickerShowing, content: {MusicPicker(savedSongs: $savedSongs)})
-                    .sheet(isPresented: $videoPickerShowing, content: {VideoPicker()})
             }
         }
     }
@@ -56,8 +38,15 @@ struct LibraryView: View {
 
 
 struct AllSongs: View {
-    @Binding var savedSongs: [Song]
+    
+    @Query var savedSongs: [Song]
+    @Environment(\.modelContext) var context
+    @State private var newSong: Song!
+    @State private var newDocument: Song!
+    @State private var newVideo: Song!
+    
     @Binding var looper: Looper
+    
     var body: some View {
         List{
             if savedSongs.isEmpty {
@@ -71,8 +60,49 @@ struct AllSongs: View {
                 }
                 .foregroundStyle(.foreground)
             }
+            .onDelete(perform: deleteSong(indexes:))
+            Menu("Import",systemImage: "plus") {
+                Button("Apple Music", systemImage: "music.note.square.stack",action: addSong)
+                Button("Documents", systemImage: "folder", action: addDocument)
+                Button("Videos", systemImage: "camera", action: addVideo)
+            }
         }
         .navigationTitle("All Songs")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                EditButton()
+            }
+        }
+        .sheet(item: $newDocument) { song in
+            DocumentPicker(song: song)
+        }
+        .sheet(item: $newSong) { song in
+            MusicPicker(song: song)
+        }
+        .sheet(item: $newVideo) { song in
+            VideoPicker(song: song)
+        }
+    }
+    
+    private func addVideo(){
+        let newVideo = Song(title: "demo audio", isSecure: false)
+        context.insert(newVideo)
+        self.newVideo = newVideo
+    }
+    private func addDocument(){
+        let newDocument = Song(title: "demo audio", isSecure: true)
+        context.insert(newDocument)
+        self.newDocument = newDocument
+    }
+    private func addSong(){
+        let newSong = Song(title: "demo audio", isSecure: false)
+        context.insert(newSong)
+        self.newSong = newSong
+    }
+    private func deleteSong(indexes: IndexSet){
+        for i in indexes {
+            context.delete(savedSongs[i])
+        }
     }
 }
 struct FavoriteSongs: View {
@@ -94,12 +124,8 @@ struct RecentSongs: View {
 
 }
 struct Playlists: View {
-    @Binding var playlists: [Playlist]
     var body: some View {
         List{
-            ForEach(playlists) { playlist in
-                
-            }
             Button("Add Playlist", systemImage: "plus") {
                 
             }
