@@ -12,9 +12,6 @@ import AVFAudio
 struct LibraryView: View {
     
     @Binding var looper: Looper
-    @State var musicPickerShowing: Bool = false
-    @State var documentPickerShowing: Bool = false
-    @State var videoPickerShowing: Bool = false
     
     var body: some View {
         NavigationStack{
@@ -38,45 +35,40 @@ struct LibraryView: View {
 
 
 struct AllSongs: View {
-    
-    @Query var savedSongs: [Song]
-    @Environment(\.modelContext) var context
     @State private var newSong: Song!
     @State private var newDocument: Song!
     @State private var newVideo: Song!
     
     @Binding var looper: Looper
     
-    @State var searchQuery: String = ""
-    @State var searchResults: [Song] = []
+    @State var menuShowing: Bool = false
+    @State var selection: Song!
     
-    var isSearching: Bool {
-        return !searchQuery.isEmpty
-    }
+    @Query var savedSongs: [Song]
+    @Environment(\.modelContext) var context
     
     var body: some View {
-        List{
-            if isSearching {
-                ForEach(searchResults) { song in
-                    Button(song.artist + " - " + song.title) {
-                        looper.loadAudio(song: song)
-                    }
-                }
-                .onDelete(perform: deleteSong(indexes:))
-            } else {
-                ForEach(savedSongs) { song in
-                    Button(song.artist + " - " + song.title) {
-                        looper.loadAudio(song: song)
-                        // TODO send the user back to LooperView()
-                    }
-                    .foregroundStyle(.foreground)
-                }
-                .onDelete(perform: deleteSong(indexes:))
+        
+        VStack {
+            SongList(selection: $selection, looper: $looper)
+            .onChange(of: selection) {
+                looper.loadAudio(song: selection)
+
             }
-            Menu("Import",systemImage: "plus") {
-                Button("Apple Music", systemImage: "music.note.square.stack",action: addSong)
-                Button("Documents", systemImage: "folder", action: addDocument)
-                Button("Videos", systemImage: "camera", action: addVideo)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing, content: {
+                Button("Add Song", systemImage: "plus") {
+                    menuShowing = true
+                }
+            })
+        }
+        .sheet(isPresented: $menuShowing) {
+            //TODO this sucks
+        List{
+            Button("Apple Library", systemImage: "music.note.square.stack", action: addSong)
+            Button("Documents",systemImage: "folder",action:addDocument)
+            Button("videos", systemImage: "camera",action:addVideo)
             }
         }
         .sheet(item: $newDocument) { song in
@@ -88,27 +80,7 @@ struct AllSongs: View {
         .sheet(item: $newVideo) { song in
             VideoPicker(song: song)
         }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                EditButton()
-            }
-        }
-        .searchable(text: $searchQuery,
-                    placement: .automatic,
-                    prompt: "Song or Artist Name")
-        .textInputAutocapitalization(.never)
-        .onChange(of: searchQuery){
-            self.fetchSearchResults(for: searchQuery)
-        }
         .navigationTitle("All Songs")
-    }
-    
-    private func fetchSearchResults(for query: String){
-        searchResults = savedSongs.filter { song in
-            song.title
-                .lowercased()
-                .contains(query)
-        }
     }
     
     private func addVideo(){
@@ -126,16 +98,13 @@ struct AllSongs: View {
         context.insert(newSong)
         self.newSong = newSong
     }
-    private func deleteSong(indexes: IndexSet){
-        for i in indexes {
-            context.delete(savedSongs[i])
-        }
-    }
 }
 
 struct Playlists: View {
     
     @Query private var playlists: [Playlist]
+    @Query private var songs: [Song]
+    @State private var selection = Set<Song>()
     @Environment(\.modelContext) private var context
     @State private var newPlaylist: Playlist!
     
@@ -143,15 +112,22 @@ struct Playlists: View {
         // splitview or stack? what's the difference?
         NavigationStack{
             List{
+                // TODO just do this in the list
                 ForEach(playlists) { playlist in
                     NavigationLink(playlist.name){
-                        // add view of playlist here
+                        ForEach(playlist.songs) { song in
+                            // search in playlist?
+                            Text(song.title)
+                        }
                     }
                 }
                 Button("New Playlist", systemImage: "plus", action: addPlaylist)
             }
             .sheet(item: $newPlaylist){ playlist in
                 NavigationStack{
+                    List(songs, id: \.self, selection: $selection) { song in
+                        Text(song.title)
+                    }
                 }
             }
             .navigationTitle("Playlists")
