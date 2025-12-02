@@ -5,8 +5,15 @@
 //  Created by Jacob Spreadborough on 12/1/25.
 //
 
-struct Playlist: Identifiable {
+import SwiftData
+
+@Model
+class Playlist: Identifiable {
     var name: String
     var songs: [Song]
-    var id: String{name}
+    
+    init(name: String, songs: [Song]) {
+        self.name = name
+        self.songs = songs
+    }
 }

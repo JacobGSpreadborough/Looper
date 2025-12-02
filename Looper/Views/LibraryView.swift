@@ -25,10 +25,10 @@ struct LibraryView: View {
                 NavigationLink(destination: Playlists(), label: {
                     Label("Playlists", systemImage: "music.note.square.stack")
                 })
-                NavigationLink(destination: FavoriteSongs(), label: {
+                NavigationLink(destination: Favorites(), label: {
                     Label("Favorites", systemImage: "star")
                 })
-                NavigationLink(destination: RecentSongs(), label: {
+                NavigationLink(destination: Recents(), label: {
                     Label("Recents", systemImage: "clock")
                 })
             }
@@ -47,30 +47,36 @@ struct AllSongs: View {
     
     @Binding var looper: Looper
     
+    @State var searchQuery: String = ""
+    @State var searchResults: [Song] = []
+    
+    var isSearching: Bool {
+        return !searchQuery.isEmpty
+    }
+    
     var body: some View {
         List{
-            if savedSongs.isEmpty {
-                // TODO make this small and gray
-                Text("No saved songs")
-            }
-            ForEach(savedSongs) { song in
-                Button(song.artist + " - " + song.title) {
-                    looper.loadAudio(song: song)
-                    // TODO send the user back to LooperView()
+            if isSearching {
+                ForEach(searchResults) { song in
+                    Button(song.artist + " - " + song.title) {
+                        looper.loadAudio(song: song)
+                    }
                 }
-                .foregroundStyle(.foreground)
+                .onDelete(perform: deleteSong(indexes:))
+            } else {
+                ForEach(savedSongs) { song in
+                    Button(song.artist + " - " + song.title) {
+                        looper.loadAudio(song: song)
+                        // TODO send the user back to LooperView()
+                    }
+                    .foregroundStyle(.foreground)
+                }
+                .onDelete(perform: deleteSong(indexes:))
             }
-            .onDelete(perform: deleteSong(indexes:))
             Menu("Import",systemImage: "plus") {
                 Button("Apple Music", systemImage: "music.note.square.stack",action: addSong)
                 Button("Documents", systemImage: "folder", action: addDocument)
                 Button("Videos", systemImage: "camera", action: addVideo)
-            }
-        }
-        .navigationTitle("All Songs")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                EditButton()
             }
         }
         .sheet(item: $newDocument) { song in
@@ -81,6 +87,27 @@ struct AllSongs: View {
         }
         .sheet(item: $newVideo) { song in
             VideoPicker(song: song)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                EditButton()
+            }
+        }
+        .searchable(text: $searchQuery,
+                    placement: .automatic,
+                    prompt: "Song or Artist Name")
+        .textInputAutocapitalization(.never)
+        .onChange(of: searchQuery){
+            self.fetchSearchResults(for: searchQuery)
+        }
+        .navigationTitle("All Songs")
+    }
+    
+    private func fetchSearchResults(for query: String){
+        searchResults = savedSongs.filter { song in
+            song.title
+                .lowercased()
+                .contains(query)
         }
     }
     
@@ -105,16 +132,41 @@ struct AllSongs: View {
         }
     }
 }
-struct FavoriteSongs: View {
+
+struct Playlists: View {
+    
+    @Query private var playlists: [Playlist]
+    @Environment(\.modelContext) private var context
+    @State private var newPlaylist: Playlist!
+    
     var body: some View {
-        List{
-            
+        // splitview or stack? what's the difference?
+        NavigationStack{
+            List{
+                ForEach(playlists) { playlist in
+                    NavigationLink(playlist.name){
+                        // add view of playlist here
+                    }
+                }
+                Button("New Playlist", systemImage: "plus", action: addPlaylist)
+            }
+            .sheet(item: $newPlaylist){ playlist in
+                NavigationStack{
+                }
+            }
+            .navigationTitle("Playlists")
         }
-        .navigationTitle("Favorites")
+    }
+    private func addPlaylist() {
+        let newPlaylist = Playlist(name: "", songs: [])
+        context.insert(newPlaylist)
+        self.newPlaylist = newPlaylist
     }
 
 }
-struct RecentSongs: View {
+
+
+struct Recents: View {
     var body: some View {
         List{
             
@@ -123,12 +175,9 @@ struct RecentSongs: View {
     }
 
 }
-struct Playlists: View {
+struct Favorites: View {
     var body: some View {
         List{
-            Button("Add Playlist", systemImage: "plus") {
-                
-            }
         }
         .navigationTitle("Playlists")
     }
