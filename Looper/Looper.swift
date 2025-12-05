@@ -13,14 +13,16 @@ import MediaPlayer
 
 class Looper {
     private let engine = AudioEngine()
+    var player: AudioPlayer!
+    var speedPitch: TimePitch!
+    var recorder: NodeRecorder!
+    
     var samples: SampleBuffer!
     // start point and duration in samples rather than seconds
     var loopStartSample: Int!
     var loopLengthSample: Int!
     // prevent loops from being too short
     let MINIMUM_LOOP_LENGTH: TimeInterval = 1
-    var player: AudioPlayer!
-    var speedPitch: TimePitch!
     // steps above or below original
     var pitch: AUValue = 0
     var EQ60: LowShelfFilter!
@@ -40,7 +42,14 @@ class Looper {
         
         print("looper initializing")
         
+        requestMic()
+        setupSession()
+        setupChain()
+        
         player = AudioPlayer()
+        
+        let settings = AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2) ?? AVAudioFormat()
+        recorder.recordFormat = settings
         
         loadAudio(song: song)
         
@@ -60,7 +69,7 @@ class Looper {
         EQ10k = HighShelfFilter(EQ2k4, cutOffFrequency: 10000, gain: 0)
         
         speedPitch = TimePitch(EQ10k)
-        
+
         engine.output = speedPitch
         try!engine.start()
     }
@@ -73,10 +82,12 @@ class Looper {
         
         // TODO handle case of loading song with only 1 channel
         if(player.outputFormat.sampleRate != file.fileFormat.sampleRate) {
+            print("sample rate mismatch, reinitializing player")
+            Settings.audioFormat = AVAudioFormat(standardFormatWithSampleRate: file.fileFormat.sampleRate, channels: 2) ?? AVAudioFormat()
             player = AudioPlayer(file: file, buffered: true)
             attachPlayer()
         } else {
-            try!player.load(file: file,buffered: true)
+            try!player.load(file: file,buffered: true, preserveEditTime: false)
         }
         
         duration = player.duration
@@ -88,6 +99,58 @@ class Looper {
         fileName = song.artist + " - " + song.title
     }
     
+    func toggleRecording() {
+        if recorder.isRecording {
+            recorder.stop()
+        } else {
+            do {
+                try recorder.record()
+            } catch {
+                print("recorder could not start")
+            }
+        }
+    }
+    func togglePlaying() {
+        if(player.isPlaying) {
+            player.stop()
+        } else if let file = recorder.audioFile {
+            player.file = file
+            player.start()
+        }
+    }
+    
+    private func setupSession() {
+        // set up session
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(AVAudioSession.Category.playAndRecord, options: [.defaultToSpeaker, .allowBluetoothHFP])
+            try session.setActive(true)
+        } catch {
+            print("session setup failure")
+        }
+    }
+    private func setupChain(){
+        // set up chain
+        guard let input = engine.input else {
+            fatalError("no mic available")
+        }
+        do {
+            recorder = try NodeRecorder(node: input)
+        } catch {
+            fatalError("could not set up recorder")
+        }
+    }
+    private func requestMic(){
+        AVAudioApplication.requestRecordPermission { granted in
+            DispatchQueue.main.async {
+                guard granted else {
+                    print("permission not granted")
+                    return
+                }
+            }
+        }
+    }
+   
     open func changePitch(steps: AUValue) {
         if(pitch <= 24 && pitch >= -24) {
             pitch += steps

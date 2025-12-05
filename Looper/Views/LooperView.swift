@@ -20,6 +20,8 @@ struct LooperView: View {
     @State private var currentTime: TimeInterval = 0
     @State private var sliderUpdating: Bool = true;
     
+    @State private var menuShowing: Bool = true
+    
     var body: some View {
         NavigationView {
             // main stack
@@ -33,7 +35,6 @@ struct LooperView: View {
                 LoopNavigator(looper: $looper, sliderUpdating: $sliderUpdating, currentTime: $currentTime)
                 // volume
                 VolumeSlider(looper: $looper)
-                
             }
         }
     }
