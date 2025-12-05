@@ -22,6 +22,7 @@ class Song: Identifiable, Equatable {
     var searchString: String {
         artist + title
     }
+    var imageData: Data?
     
     init(title: String = "", artist: String = "", bookmark: Data? = nil, isSecure: Bool) {
         self.title = title

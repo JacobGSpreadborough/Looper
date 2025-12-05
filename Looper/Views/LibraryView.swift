@@ -20,7 +20,7 @@ struct LibraryView: View {
                     Label("All", systemImage: "line.horizontal.3")
                 })
                 NavigationLink(destination: Playlists(), label: {
-                    Label("Playlists", systemImage: "music.note.square.stack")
+                    Label("Playlists", systemImage: "music.note.list")
                 })
                 NavigationLink(destination: Favorites(), label: {
                     Label("Favorites", systemImage: "star")
@@ -30,6 +30,7 @@ struct LibraryView: View {
                 })
             }
         }
+        .navigationTitle("Library")
     }
 }
 
@@ -42,19 +43,18 @@ struct AllSongs: View {
     @Binding var looper: Looper
     
     @State var menuShowing: Bool = false
-    @State var selection: Song!
+    @State var selection: Song?
     
     @Query var savedSongs: [Song]
     @Environment(\.modelContext) var context
     
     var body: some View {
         
-        VStack {
+        NavigationStack {
             SongList(selection: $selection, looper: $looper)
-            .onChange(of: selection) {
-                looper.loadAudio(song: selection)
-
-            }
+        }
+        .onChange(of: selection) {
+            looper.loadAudio(song: selection!)
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing, content: {
@@ -63,12 +63,19 @@ struct AllSongs: View {
                 }
             })
         }
-        .sheet(isPresented: $menuShowing) {
-            //TODO this sucks
-        List{
-            Button("Apple Library", systemImage: "music.note.square.stack", action: addSong)
-            Button("Documents",systemImage: "folder",action:addDocument)
-            Button("videos", systemImage: "camera",action:addVideo)
+        .confirmationDialog("Add Song", isPresented: $menuShowing) {
+            Button("Apple Library", systemImage: "music.note.list", action: {
+                addSong()
+            })
+            Button("Documents",systemImage: "folder", action: {
+                addDocument()
+            })
+            // TODO implement
+            Button("Videos", systemImage: "camera", action: {
+                addSong()
+            })
+            // TODO implement
+            Button("Record",systemImage: "waveform") {
             }
         }
         .sheet(item: $newDocument) { song in
@@ -84,17 +91,17 @@ struct AllSongs: View {
     }
     
     private func addVideo(){
-        let newVideo = Song(title: "demo audio", isSecure: false)
+        let newVideo = Song(isSecure: false)
         context.insert(newVideo)
         self.newVideo = newVideo
     }
     private func addDocument(){
-        let newDocument = Song(title: "demo audio", isSecure: true)
+        let newDocument = Song(isSecure: true)
         context.insert(newDocument)
         self.newDocument = newDocument
     }
     private func addSong(){
-        let newSong = Song(title: "demo audio", isSecure: false)
+        let newSong = Song(isSecure: false)
         context.insert(newSong)
         self.newSong = newSong
     }

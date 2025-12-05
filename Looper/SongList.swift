@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SongList: View {
-    @Binding var selection: Song!
+    @Binding var selection: Song?
     @Binding var looper: Looper
     
     @Query var savedSongs: [Song]
@@ -20,17 +20,19 @@ struct SongList: View {
     var isSearching: Bool {
         return !searchQuery.isEmpty
     }
-    
     var body: some View {
+       
         List(selection: $selection) {
             if !isSearching {
                 ForEach(savedSongs) { song in
-                    Text(song.title)
+                    SongDisplay(song: song)
+                        .tag(song)
                 }
                 .onDelete(perform: deleteSong)
             } else {
                 ForEach(searchResults) { song in
-                    Text(song.title)
+                    SongDisplay(song: song)
+                        .tag(song)
                 }
                 .onDelete(perform: deleteSong(indexes:))
             }

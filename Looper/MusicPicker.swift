@@ -7,7 +7,7 @@
 
 import SwiftUI
 import MediaPlayer
-
+import UIKit
 
 struct MusicPicker: UIViewControllerRepresentable {
     
@@ -43,6 +43,14 @@ struct MusicPicker: UIViewControllerRepresentable {
                 }
                 do {
                     let data = try url.bookmarkData()
+                    if let artwork = mediaItem.artwork {
+                        if let image = artwork.image(at: artwork.bounds.size) {
+                            print("height:\(artwork.bounds.height)")
+                            print("width:\(artwork.bounds.width)")
+                            parent.song.imageData = image.pngData()
+                        }
+                    }
+
                     parent.song.artist = mediaItem.artist ?? "Unknown"
                     parent.song.title = mediaItem.title ?? "Unknown"
                     parent.song.bookmark = data

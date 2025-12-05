@@ -5,6 +5,9 @@
 //  Created by Jacob Spreadborough on 10/24/25.
 //
 import Foundation
+import UIKit
+import PhotosUI
+import _PhotosUI_SwiftUI
 
 class Utils {
     public static func timeFormatter(time: Double) -> String {
