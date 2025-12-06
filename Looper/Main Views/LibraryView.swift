@@ -14,6 +14,7 @@ struct LibraryView: View {
     @Binding var looper: Looper
     
     var body: some View {
+        // TODO: fix ugly background in light mode
         NavigationStack{
             List{
                 NavigationLink(destination: AllSongs(looper: $looper), label: {
