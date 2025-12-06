@@ -36,9 +36,10 @@ struct LibraryView: View {
 
 
 struct AllSongs: View {
-    @State private var newSong: Song!
-    @State private var newDocument: Song!
-    @State private var newVideo: Song!
+    
+    @State private var documentPickerShowing: Bool = false
+    @State private var musicPickerShowing: Bool = false
+    @State private var videoPickerShowing: Bool = false
     
     @Binding var looper: Looper
     
@@ -65,45 +66,30 @@ struct AllSongs: View {
         }
         .confirmationDialog("Add Song", isPresented: $menuShowing) {
             Button("Apple Library", systemImage: "music.note.list", action: {
-                addSong()
+                musicPickerShowing = true
             })
             Button("Documents",systemImage: "folder", action: {
-                addDocument()
+                documentPickerShowing = true
+                
             })
             // TODO implement
             Button("Videos", systemImage: "camera", action: {
-                addSong()
+                videoPickerShowing = true
             })
             // TODO implement
             Button("Record",systemImage: "waveform") {
             }
         }
-        .sheet(item: $newDocument) { song in
-            DocumentPicker(song: song)
-        }
-        .sheet(item: $newSong) { song in
-            MusicPicker(song: song)
-        }
-        .sheet(item: $newVideo) { song in
-            VideoPicker(song: song)
-        }
+        .sheet(isPresented: $documentPickerShowing, content: {
+            DocumentPicker()
+        })
+        .sheet(isPresented: $musicPickerShowing, content: {
+            MusicPicker()
+        })
+        .sheet(isPresented: $videoPickerShowing, content: {
+            VideoPicker()
+        })
         .navigationTitle("All Songs")
-    }
-    
-    private func addVideo(){
-        let newVideo = Song(isSecure: false)
-        context.insert(newVideo)
-        self.newVideo = newVideo
-    }
-    private func addDocument(){
-        let newDocument = Song(isSecure: true)
-        context.insert(newDocument)
-        self.newDocument = newDocument
-    }
-    private func addSong(){
-        let newSong = Song(isSecure: false)
-        context.insert(newSong)
-        self.newSong = newSong
     }
 }
 

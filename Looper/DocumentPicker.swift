@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 internal import UniformTypeIdentifiers
 
 
 struct DocumentPicker: UIViewControllerRepresentable {
     
-    let song: Song
+    //let song: Song
+    @Environment(\.modelContext) private var context
+    @Query var songs: [Song]
 
     func makeUIViewController(context: Context) -> some UIDocumentPickerViewController {
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.audio])
@@ -38,11 +41,13 @@ struct DocumentPicker: UIViewControllerRepresentable {
             
             for url in urls {
                 if(url.startAccessingSecurityScopedResource()) {
-                    parent.song.artist = "User"
-                    parent.song.title = url.lastPathComponent
+                    //parent.song.artist = "User"
+                    //parent.song.title = url.lastPathComponent
                     do{
                         let data = try url.bookmarkData( includingResourceValuesForKeys: nil, relativeTo: nil)
-                        parent.song.bookmark = data
+                        let newSong = Song(title: url.lastPathComponent, artist: "User", bookmark: data, isSecure: true)
+                        parent.context.insert(newSong)
+                        try parent.context.save()
                     } catch{
                         fatalError("bookmark creation failed")
                     }

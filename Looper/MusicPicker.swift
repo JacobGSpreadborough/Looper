@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 import MediaPlayer
 import UIKit
 
 struct MusicPicker: UIViewControllerRepresentable {
     
-    let song: Song
+    @Environment(\.modelContext) private var context
+    @Query var songs: [Song]
     
     func makeUIViewController(context: Context) -> some MPMediaPickerController {
         let picker = MPMediaPickerController(mediaTypes: .music)
@@ -45,15 +47,13 @@ struct MusicPicker: UIViewControllerRepresentable {
                     let data = try url.bookmarkData()
                     if let artwork = mediaItem.artwork {
                         if let image = artwork.image(at: artwork.bounds.size) {
-                            print("height:\(artwork.bounds.height)")
-                            print("width:\(artwork.bounds.width)")
-                            parent.song.imageData = image.pngData()
+                            let newSong = Song(title: mediaItem.title!, artist: mediaItem.artist!, bookmark: data, isSecure: false)
+                            newSong.imageData = image.pngData()
+                            parent.context.insert(newSong)
+                            try parent.context.save()
                         }
                     }
-
-                    parent.song.artist = mediaItem.artist ?? "Unknown"
-                    parent.song.title = mediaItem.title ?? "Unknown"
-                    parent.song.bookmark = data
+                    
                     
                 } catch {
                     fatalError("couldn't create bookmark from url")

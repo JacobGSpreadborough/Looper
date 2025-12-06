@@ -10,8 +10,6 @@ import PhotosUI
 
 
 struct VideoPicker: UIViewControllerRepresentable {
-    
-    let song: Song
 
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
