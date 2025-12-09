@@ -9,34 +9,43 @@ import SwiftUI
 import SwiftData
 
 struct SongList: View {
-    @Binding var selection: Song?
-    @Binding var looper: Looper
-    
-    @Query var savedSongs: [Song]
-    @Environment(\.modelContext) var context
-    
-    @State var searchQuery: String = ""
-    @State var searchResults: [Song] = []
-    var isSearching: Bool {
+    // allow for multiple selection
+    @Binding var selection: Set<Song>
+    // SwiftData storage
+    @Query private var savedSongs: [Song]
+    @Environment(\.modelContext) private var context
+    //
+    @State var editMode: EditMode
+    let deletable: Bool
+    // search utility
+    @State private var searchQuery: String = ""
+    @State private var searchResults: [Song] = []
+    private var isSearching: Bool {
         return !searchQuery.isEmpty
     }
+    
     var body: some View {
-       
         List(selection: $selection) {
             if !isSearching {
                 ForEach(savedSongs) { song in
                     SongDisplay(song: song)
                         .tag(song)
                 }
+                // toggle deletion based on user input
                 .onDelete(perform: deleteSong)
+                .deleteDisabled(!deletable)
             } else {
                 ForEach(searchResults) { song in
                     SongDisplay(song: song)
                         .tag(song)
                 }
-                .onDelete(perform: deleteSong(indexes:))
+                // toggle deletion based on user input
+                .onDelete(perform: deleteSong)
+                .deleteDisabled(!deletable)
             }
         }
+        // toggle editing mode based on user input
+        .environment(\.editMode, $editMode)
         .searchable(text: $searchQuery,
                     placement: .automatic,
                     prompt: "Song or Artist Name")

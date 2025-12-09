@@ -7,10 +7,15 @@
 
 import SwiftData
 import AVFAudio
-import SwiftUI
 
 @Model
-class Song: Identifiable, Equatable {
+class Song: Identifiable, Equatable, Comparable {
+
+    // comform to comparable
+    static func < (lhs: Song, rhs: Song) -> Bool {
+        return lhs.bookmark == rhs.bookmark
+    }
+    
     var title: String
     var artist: String
     // prevent duplicate files

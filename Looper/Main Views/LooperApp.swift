@@ -29,6 +29,6 @@ struct LooperApp: App {
                 }
             }
         }
-        .modelContainer(for: Song.self)
+        .modelContainer(for: [Song.self, Playlist.self])
     }
 }

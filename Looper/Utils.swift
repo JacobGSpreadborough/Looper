@@ -18,7 +18,15 @@ class Utils {
         return String(format: "%02d:%02d:%02d", minutes,seconds,milliseconds)
     }
 }
-// 
+// TODO: make this general
+func setToArray(set: Set<Song>) -> [Song] {
+    var output = [Song]()
+    for song in set {
+        output.append(song)
+    }
+    return output
+}
+//
 func stringPlural(number: Float) -> String {
     if(number != 1 && number != -1) {
         return "s"

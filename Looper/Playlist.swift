@@ -9,11 +9,11 @@ import SwiftData
 
 @Model
 class Playlist: Identifiable {
-    var name: String
-    var songs: [Song]
     
-    init(name: String, songs: [Song]) {
+    var name: String
+    var songs: [Song] = []
+    
+    init(name: String) {
         self.name = name
-        self.songs = songs
     }
 }

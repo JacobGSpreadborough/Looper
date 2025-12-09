@@ -19,8 +19,9 @@ struct LibraryView: View {
             List{
                 NavigationLink(destination: AllSongs(looper: $looper), label: {
                     Label("All", systemImage: "line.horizontal.3")
+                    
                 })
-                NavigationLink(destination: Playlists(), label: {
+                NavigationLink(destination: Playlists(looper: $looper), label: {
                     Label("Playlists", systemImage: "music.note.list")
                 })
                 NavigationLink(destination: Favorites(), label: {
@@ -30,8 +31,8 @@ struct LibraryView: View {
                     Label("Recents", systemImage: "clock")
                 })
             }
+            .navigationTitle("Library")
         }
-        .navigationTitle("Library")
     }
 }
 
@@ -45,7 +46,7 @@ struct AllSongs: View {
     @Binding var looper: Looper
     
     @State var menuShowing: Bool = false
-    @State var selection: Song?
+    @State var selection: Set<Song> = []
     
     @Query var savedSongs: [Song]
     @Environment(\.modelContext) var context
@@ -53,10 +54,11 @@ struct AllSongs: View {
     var body: some View {
         
         NavigationStack {
-            SongList(selection: $selection, looper: $looper)
+            SongList(selection: $selection, editMode: .inactive, deletable: true)
         }
         .onChange(of: selection) {
-            looper.loadAudio(song: selection!)
+            // just use first element of the set, it's impossible to have more than one since the list is not in edit mode
+            looper.loadAudio(song: selection.first!)
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing, content: {
@@ -95,44 +97,87 @@ struct AllSongs: View {
 }
 
 struct Playlists: View {
+    @Binding var looper: Looper
     
     @Query private var playlists: [Playlist]
-    @Query private var songs: [Song]
-    @State private var selection = Set<Song>()
+    //@Query private var songs: [Song]
+    @State private var selection: Set<Song> = []
     @Environment(\.modelContext) private var context
     @State private var newPlaylist: Playlist!
+    @State private var songPickerShowing: Bool = false
+    @State private var nameDialogShowing: Bool = false
+    @State private var newName: String = "New Playlist"
     
     var body: some View {
-        // splitview or stack? what's the difference?
         NavigationStack{
             List{
                 // TODO just do this in the list
                 ForEach(playlists) { playlist in
                     NavigationLink(playlist.name){
-                        ForEach(playlist.songs) { song in
-                            // search in playlist?
-                            Text(song.title)
+                        PlaylistSongView(playlist: playlist, looper: $looper)
+                    }
+                }
+            }
+            Button("New Playlist", systemImage: "plus") {
+                    nameDialogShowing = true
+            }
+        }
+        // present name dialog
+        // create playlist and present song list once a name is entered
+        .alert("playist name", isPresented: $nameDialogShowing) {
+            TextField("Enter playlist title", text: $newName)
+            Button("Confirm") {
+                songPickerShowing = true
+               // createPlaylist(name: newName)
+            }
+            Button("Cancel",role: .cancel){}
+        }
+        // present song list
+        .sheet(isPresented: $songPickerShowing){
+            // TODO: add cancel / done button
+            NavigationView {
+                SongList(selection: $selection, editMode: .active, deletable: false)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing){
+                            // create new playlist, add songs, insert into storage
+                            Button("Done"){
+                                let newPlaylist = Playlist(name: newName)
+                                newPlaylist.songs.append(contentsOf: selection)
+                                context.insert(newPlaylist)
+                                do {
+                                    try context.save()
+                                } catch {
+                                    fatalError("save failed")
+                                }
+                                // dismiss song list sheet
+                                songPickerShowing = false
+                                // reset new name variable
+                                newName = "New Playlist"
+                            }
+                        }
+                        ToolbarItem(placement: .topBarLeading){
+                            Button("Cancel", role: .cancel){}
                         }
                     }
-                }
-                Button("New Playlist", systemImage: "plus", action: addPlaylist)
             }
-            .sheet(item: $newPlaylist){ playlist in
-                NavigationStack{
-                    List(songs, id: \.self, selection: $selection) { song in
-                        Text(song.title)
-                    }
-                }
-            }
-            .navigationTitle("Playlists")
+        }
+            
+        .onChange(of: selection) {
+            print("song selected")
+        }
+        .navigationTitle("Playlists")
+    }
+    
+    private func createPlaylist(name: String) {
+        print("creating playlist")
+        newPlaylist = Playlist(name: name)
+        context.insert(newPlaylist)
+        do{
+            try context.save()
+        } catch {
+            fatalError("save failed")
         }
     }
-    private func addPlaylist() {
-        let newPlaylist = Playlist(name: "", songs: [])
-        context.insert(newPlaylist)
-        self.newPlaylist = newPlaylist
-    }
-
 }
 
 

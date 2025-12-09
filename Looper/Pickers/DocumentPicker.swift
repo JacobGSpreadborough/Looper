@@ -60,6 +60,8 @@ struct DocumentPicker: UIViewControllerRepresentable {
         }
         
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+            let manager = FileManager()
+            print(manager.currentDirectoryPath)
             // TODO probably should do something maybe IDK
         }
     }
