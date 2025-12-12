@@ -85,8 +85,8 @@ class Looper: ObservableObject {
         }
         
         // reset speed
-        speedPitch.rate = 0
-        changeSpeed(percent: 100)
+        //speedPitch.rate = 0
+        //changeSpeed(percent: 100)
         
         duration = player.duration
 

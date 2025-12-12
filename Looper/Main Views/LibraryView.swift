@@ -14,6 +14,11 @@ struct LibraryView: View {
     @Binding var looper: Looper
     @Binding var currentTab: Int
     
+    @State private var documentPickerShowing: Bool = false
+    @State private var musicPickerShowing: Bool = false
+    @State private var videoPickerShowing: Bool = false
+    @State var menuShowing: Bool = false
+    
     var body: some View {
         // TODO: fix ugly background in light mode
         NavigationStack{
@@ -31,6 +36,39 @@ struct LibraryView: View {
                     Label("Recents", systemImage: "clock")
                 })
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing, content: {
+                    Button("Add Song", systemImage: "plus") {
+                        menuShowing = true
+                    }
+                })
+            }
+            .confirmationDialog("Add Song", isPresented: $menuShowing) {
+                Button("Apple Library", systemImage: "music.note.list", action: {
+                    musicPickerShowing = true
+                })
+                Button("Documents",systemImage: "folder", action: {
+                    documentPickerShowing = true
+                    
+                })
+                // TODO implement
+                Button("Videos", systemImage: "camera", action: {
+                    videoPickerShowing = true
+                })
+                // TODO implement
+                Button("Record",systemImage: "waveform") {
+                }
+            }
+            .sheet(isPresented: $documentPickerShowing, content: {
+                DocumentPicker()
+            })
+            .sheet(isPresented: $musicPickerShowing, content: {
+                MusicPicker()
+            })
+            .sheet(isPresented: $videoPickerShowing, content: {
+                VideoPicker()
+            })
+            .navigationTitle("All Songs")
             .navigationTitle("Library")
         }
     }

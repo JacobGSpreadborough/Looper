@@ -36,6 +36,38 @@ struct LooperView: View {
                 // volume
                 VolumeSlider(looper: $looper)
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing, content: {
+                    Button("Add Song", systemImage: "plus") {
+                        menuShowing = true
+                    }
+                })
+            }
+            .confirmationDialog("Add Song", isPresented: $menuShowing) {
+                Button("Apple Library", systemImage: "music.note.list", action: {
+                    musicPickerShowing = true
+                })
+                Button("Documents",systemImage: "folder", action: {
+                    documentPickerShowing = true
+                    
+                })
+                // TODO implement
+                Button("Videos", systemImage: "camera", action: {
+                    videoPickerShowing = true
+                })
+                // TODO implement
+                Button("Record",systemImage: "waveform") {
+                }
+            }
+            .sheet(isPresented: $documentPickerShowing, content: {
+                DocumentPicker()
+            })
+            .sheet(isPresented: $musicPickerShowing, content: {
+                MusicPicker()
+            })
+            .sheet(isPresented: $videoPickerShowing, content: {
+                VideoPicker()
+            })
         }
     }
 }

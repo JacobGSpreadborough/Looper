@@ -13,11 +13,11 @@ struct AllSongs: View {
     @State private var documentPickerShowing: Bool = false
     @State private var musicPickerShowing: Bool = false
     @State private var videoPickerShowing: Bool = false
+    @State var menuShowing: Bool = false
     
     @Binding var looper: Looper
     @Binding var currentTab: Int
     
-    @State var menuShowing: Bool = false
     @State var selection: Set<Song> = []
     
     @Query var savedSongs: [Song]
