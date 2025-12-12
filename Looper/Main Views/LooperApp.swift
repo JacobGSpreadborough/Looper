@@ -22,18 +22,21 @@ struct LooperApp: App {
                         Text("Looper")
                     }
                     .tag(0)
+                    .padding()
                 LibraryView(looper: $looper, currentTab: $currentTab)
                     .tabItem {
                         Image(systemName: "books.vertical.fill")
                         Text("Library")
                     }
                     .tag(1)
+                    .padding()
                 SettingsView(looper: $looper)
                     .tabItem {
                         Image(systemName: "gear")
                         Text("Settings")
                     }
                     .tag(2)
+                    .padding()
                 }
             
         }
