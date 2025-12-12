@@ -15,6 +15,7 @@ struct AllSongs: View {
     @State private var videoPickerShowing: Bool = false
     
     @Binding var looper: Looper
+    @Binding var currentTab: Int
     
     @State var menuShowing: Bool = false
     @State var selection: Set<Song> = []
@@ -28,6 +29,8 @@ struct AllSongs: View {
             SongList(selection: $selection, editMode: .inactive, deletable: true)
         }
         .onChange(of: selection) {
+            // go back to looper tab
+            currentTab = 0
             // just use first element of the set, it's impossible to have more than one since the list is not in edit mode
             looper.loadAudio(song: selection.first!)
         }

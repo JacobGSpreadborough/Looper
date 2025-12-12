@@ -12,21 +12,22 @@ import AVFAudio
 struct LibraryView: View {
     
     @Binding var looper: Looper
+    @Binding var currentTab: Int
     
     var body: some View {
         // TODO: fix ugly background in light mode
         NavigationStack{
             List{
-                NavigationLink(destination: AllSongs(looper: $looper), label: {
+                NavigationLink(destination: AllSongs(looper: $looper, currentTab: $currentTab), label: {
                     Label("All", systemImage: "line.horizontal.3")
                 })
-                NavigationLink(destination: Playlists(looper: $looper), label: {
+                NavigationLink(destination: Playlists(looper: $looper, currentTab: $currentTab), label: {
                     Label("Playlists", systemImage: "music.note.list")
                 })
-                NavigationLink(destination: Favorites(), label: {
+                NavigationLink(destination: Favorites(currentTab: $currentTab), label: {
                     Label("Favorites", systemImage: "star")
                 })
-                NavigationLink(destination: Recents(), label: {
+                NavigationLink(destination: Recents(currentTab: $currentTab), label: {
                     Label("Recents", systemImage: "clock")
                 })
             }
@@ -36,6 +37,7 @@ struct LibraryView: View {
 }
 
 struct Recents: View {
+    @Binding var currentTab: Int
     var body: some View {
         List{
             
@@ -45,6 +47,7 @@ struct Recents: View {
 
 }
 struct Favorites: View {
+    @Binding var currentTab: Int
     var body: some View {
         List{
         }

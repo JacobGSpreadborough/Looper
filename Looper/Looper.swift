@@ -48,6 +48,8 @@ class Looper {
         
         player = AudioPlayer()
         
+        player.completionHandler = completionHandler
+        
         let settings = AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2) ?? AVAudioFormat()
         recorder.recordFormat = settings
         
@@ -97,6 +99,10 @@ class Looper {
         loopLengthSample = Int((player.editEndTime - player.editStartTime) * player.outputFormat.sampleRate)
         
         fileName = song.artist + " - " + song.title
+    }
+    
+    func completionHandler() {
+        stop()
     }
     
     func toggleRecording() {

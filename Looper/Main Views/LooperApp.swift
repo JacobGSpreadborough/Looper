@@ -12,22 +12,30 @@ import SwiftData
 struct LooperApp: App {
     // start looper with static demo audio
     @State var looper = Looper(song: Song.demoSong)
+    @State var currentTab = 0
     var body: some Scene {
         WindowGroup {
-            TabView{
-                Tab("Looper", systemImage: "repeat") {
-                    LooperView(looper: $looper)
-                        .padding()
+            TabView (selection: $currentTab){
+                LooperView(looper: $looper)
+                    .tabItem{
+                        Image(systemName: "repeat")
+                        Text("Looper")
+                    }
+                    .tag(0)
+                LibraryView(looper: $looper, currentTab: $currentTab)
+                    .tabItem {
+                        Image(systemName: "books.vertical.fill")
+                        Text("Library")
+                    }
+                    .tag(1)
+                SettingsView(looper: $looper)
+                    .tabItem {
+                        Image(systemName: "gear")
+                        Text("Settings")
+                    }
+                    .tag(2)
                 }
-                Tab("Library", systemImage: "books.vertical.fill"){
-                    LibraryView(looper: $looper)
-                        .padding()
-                }
-                Tab("Settings", systemImage: "gear") {
-                    SettingsView(looper: $looper)
-                        .padding()
-                }
-            }
+            
         }
         .modelContainer(for: [Song.self, Playlist.self])
     }

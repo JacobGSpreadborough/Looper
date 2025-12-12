@@ -10,6 +10,7 @@ import SwiftData
 
 struct Playlists: View {
     @Binding var looper: Looper
+    @Binding var currentTab: Int
     
     @Query private var playlists: [Playlist]
     //@Query private var songs: [Song]
