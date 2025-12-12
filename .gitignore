@@ -1,0 +1,13 @@
+# Xcode user data  
+*.xcuserdata/  
+project.xcworkspace/xcuserdata/  
+
+# Build outputs  
+DerivedData/  
+Build/  
+Products/  
+
+# IDE settings  
+.idea/  
+.DS_Store  # macOS system file  
+
