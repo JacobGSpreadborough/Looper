@@ -10,12 +10,15 @@ import Waveform
 import Foundation
 import AVFAudio
 import MediaPlayer
+import Combine
 
-class Looper {
+class Looper: ObservableObject {
+    
     private let engine = AudioEngine()
     var player: AudioPlayer!
     var speedPitch: TimePitch!
     var recorder: NodeRecorder!
+    var EQSix: MultiBandEQ!
     
     var samples: SampleBuffer!
     // start point and duration in samples rather than seconds
@@ -24,19 +27,13 @@ class Looper {
     // prevent loops from being too short
     let MINIMUM_LOOP_LENGTH: TimeInterval = 1
     // steps above or below original
-    var pitch: AUValue = 0
-    var EQ60: LowShelfFilter!
-    var EQ150: ParametricEQ!
-    var EQ400: ParametricEQ!
-    var EQ1k: ParametricEQ!
-    var EQ2k4: ParametricEQ!
-    var EQ10k: HighShelfFilter!
+    @Published var pitch: AUValue = 0
     // we do not start playing automatically
-    var isPlaying: Bool = false
-    var isLooping: Bool = false
-    var duration: Double!
+    @Published var isPlaying: Bool = false
+    @Published var isLooping: Bool = false
+    @Published var duration: Double!
     
-    var fileName: String!
+    @Published var fileName: String!
     
     init(song: Song) {
         
@@ -63,14 +60,9 @@ class Looper {
         player.isLooping = false
         player.volume = 0.5
         
-        EQ60 = LowShelfFilter(player, cutoffFrequency: 60, gain: 0)
-        EQ150 = ParametricEQ(EQ60, centerFreq: 150, q: 1, gain: 0)
-        EQ400 = ParametricEQ(EQ150, centerFreq: 400,  q: 1, gain: 0)
-        EQ1k = ParametricEQ(EQ400, centerFreq: 1000, q: 1, gain: 0)
-        EQ2k4 = ParametricEQ(EQ1k, centerFreq: 2400,  q: 1, gain: 0)
-        EQ10k = HighShelfFilter(EQ2k4, cutOffFrequency: 10000, gain: 0)
+        EQSix = MultiBandEQ(input: player)
         
-        speedPitch = TimePitch(EQ10k)
+        speedPitch = TimePitch(EQSix)
 
         engine.output = speedPitch
         try!engine.start()
@@ -91,6 +83,10 @@ class Looper {
         } else {
             try!player.load(file: file,buffered: true, preserveEditTime: false)
         }
+        
+        // reset speed
+        speedPitch.rate = 0
+        changeSpeed(percent: 100)
         
         duration = player.duration
 
@@ -237,22 +233,5 @@ class Looper {
         player.seek(time:time - player.editStartTime)
     }
 
-    open func setEQ60(gain: Float) {
-        EQ60.gain = gain
-    }
-    open func setEQ150(gain: Float) {
-        EQ150.gain = gain
-    }
-    open func setEQ400(gain: Float) {
-        EQ400.gain = gain
-    }
-    open func setEQ1k(gain: Float) {
-        EQ1k.gain = gain
-    }
-    open func setEQ2k4(gain: Float) {
-        EQ2k4.gain = gain
-    }
-    open func setEQ10k(gain: Float) {
-        EQ10k.gain = gain
-    }
+
 };

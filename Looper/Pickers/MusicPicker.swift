@@ -18,6 +18,7 @@ struct MusicPicker: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> some MPMediaPickerController {
         let picker = MPMediaPickerController(mediaTypes: .music)
         
+        picker.showsCloudItems = false
         picker.allowsPickingMultipleItems = true
         picker.delegate = context.coordinator
         return picker
@@ -40,8 +41,7 @@ struct MusicPicker: UIViewControllerRepresentable {
             
             for mediaItem in mediaItemCollection.items {
                 guard let url = mediaItem.assetURL else {
-                    print("song does not have URL")
-                    return
+                    fatalError("song does not have URL")
                 }
                 do {
                     let data = try url.bookmarkData()
