@@ -14,10 +14,9 @@ import Combine
 
 class Looper: ObservableObject {
     
-    private let engine = AudioEngine()
+    private var engine: AudioEngine
     var player: AudioPlayer!
     var speedPitch: TimePitch!
-    var recorder: NodeRecorder!
     var EQSix: MultiBandEQ!
     
     var samples: SampleBuffer!
@@ -37,18 +36,13 @@ class Looper: ObservableObject {
     
     init(song: Song) {
         
-        print("looper initializing")
+        engine = AudioEngine()
         
-        requestMic()
-        setupSession()
-        setupChain()
+        print("looper initializing")
         
         player = AudioPlayer()
         
         player.completionHandler = completionHandler
-        
-        let settings = AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2) ?? AVAudioFormat()
-        recorder.recordFormat = settings
         
         loadAudio(song: song)
         
@@ -65,28 +59,26 @@ class Looper: ObservableObject {
         speedPitch = TimePitch(EQSix)
 
         engine.output = speedPitch
-        try!engine.start()
+        do {
+            try engine.start()
+        } catch {
+            print("engine did not start \(error)")
+        }
     }
     
     open func loadAudio(song: Song) {
         stop()
+        engine.stop()
+        
+        setupSession()
         
         let url = resolveBookmark(from: song.bookmark!, isSecure: song.isSecure)!
         let file = try!AVAudioFile(forReading: url)
+        //  set everything to 48kHz mono
+        Settings.audioFormat = AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2) ?? AVAudioFormat()
         
-        // TODO handle case of loading song with only 1 channel
-        if(player.outputFormat.sampleRate != file.fileFormat.sampleRate) {
-            print("sample rate mismatch, reinitializing player")
-            Settings.audioFormat = AVAudioFormat(standardFormatWithSampleRate: file.fileFormat.sampleRate, channels: 2) ?? AVAudioFormat()
-            player = AudioPlayer(file: file, buffered: true)
-            attachPlayer()
-        } else {
-            try!player.load(file: file,buffered: true, preserveEditTime: false)
-        }
-        
-        // reset speed
-        //speedPitch.rate = 0
-        //changeSpeed(percent: 100)
+        player = AudioPlayer(file: file, buffered: true)
+        attachPlayer()
         
         duration = player.duration
 
@@ -97,60 +89,18 @@ class Looper: ObservableObject {
         fileName = song.artist + " - " + song.title
     }
     
-    func completionHandler() {
-        stop()
-    }
-    
-    func toggleRecording() {
-        if recorder.isRecording {
-            recorder.stop()
-        } else {
-            do {
-                try recorder.record()
-            } catch {
-                print("recorder could not start")
-            }
-        }
-    }
-    func togglePlaying() {
-        if(player.isPlaying) {
-            player.stop()
-        } else if let file = recorder.audioFile {
-            player.file = file
-            player.start()
-        }
-    }
-    
-    private func setupSession() {
-        // set up session
-        let session = AVAudioSession.sharedInstance()
+    func setupSession() {
         do {
-            try session.setCategory(AVAudioSession.Category.playAndRecord, options: [.defaultToSpeaker, .allowBluetoothHFP])
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback)
             try session.setActive(true)
         } catch {
-            print("session setup failure")
+            print("session setup failed \(error)")
         }
     }
-    private func setupChain(){
-        // set up chain
-        guard let input = engine.input else {
-            fatalError("no mic available")
-        }
-        do {
-            recorder = try NodeRecorder(node: input)
-        } catch {
-            fatalError("could not set up recorder")
-        }
-    }
-    private func requestMic(){
-        AVAudioApplication.requestRecordPermission { granted in
-            DispatchQueue.main.async {
-                guard granted else {
-                    print("permission not granted")
-                    return
-                }
-            }
-        }
+    
+    func completionHandler() {
+        stop()
     }
    
     open func changePitch(steps: AUValue) {

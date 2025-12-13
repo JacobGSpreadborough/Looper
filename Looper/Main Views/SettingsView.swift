@@ -10,11 +10,11 @@ import AudioKit
 import MediaPlayer
 
 struct SettingsView: View {
-    @Binding var looper: Looper
+    @ObservedObject var looper: Looper
     var body: some View {
         NavigationStack{
             List{
-                NavigationLink(destination: EQView(looper: $looper), label: {
+                NavigationLink(destination: EQView(looper: looper), label: {
                     HStack{
                         Image(systemName: "slider.vertical.3")
                         Text("Equalization")

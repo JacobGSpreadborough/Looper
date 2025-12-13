@@ -11,22 +11,24 @@ import AVFAudio
 
 struct LibraryView: View {
     
-    @Binding var looper: Looper
+    @ObservedObject var looper: Looper
+    @ObservedObject var recorder: Recorder
     @Binding var currentTab: Int
     
     @State private var documentPickerShowing: Bool = false
     @State private var musicPickerShowing: Bool = false
     @State private var videoPickerShowing: Bool = false
+    @State private var recorderShowing: Bool = false
     @State var menuShowing: Bool = false
     
     var body: some View {
         // TODO: fix ugly background in light mode
         NavigationStack{
             List{
-                NavigationLink(destination: AllSongs(looper: $looper, currentTab: $currentTab), label: {
+                NavigationLink(destination: AllSongs(looper: looper, recorder: recorder, currentTab: $currentTab), label: {
                     Label("All", systemImage: "line.horizontal.3")
                 })
-                NavigationLink(destination: Playlists(looper: $looper, currentTab: $currentTab), label: {
+                NavigationLink(destination: Playlists(looper: looper, currentTab: $currentTab), label: {
                     Label("Playlists", systemImage: "music.note.list")
                 })
                 NavigationLink(destination: Favorites(currentTab: $currentTab), label: {
@@ -57,6 +59,7 @@ struct LibraryView: View {
                 })
                 // TODO implement
                 Button("Record",systemImage: "waveform") {
+                    recorderShowing = true
                 }
             }
             .sheet(isPresented: $documentPickerShowing, content: {
@@ -68,7 +71,9 @@ struct LibraryView: View {
             .sheet(isPresented: $videoPickerShowing, content: {
                 VideoPicker()
             })
-            .navigationTitle("All Songs")
+            .sheet(isPresented: $recorderShowing, content: {
+                RecorderView(recorder: recorder)
+            })
             .navigationTitle("Library")
         }
     }

@@ -13,9 +13,11 @@ struct AllSongs: View {
     @State private var documentPickerShowing: Bool = false
     @State private var musicPickerShowing: Bool = false
     @State private var videoPickerShowing: Bool = false
+    @State private var recorderShowing: Bool = false
     @State var menuShowing: Bool = false
     
-    @Binding var looper: Looper
+    @ObservedObject var looper: Looper
+    @ObservedObject var recorder: Recorder
     @Binding var currentTab: Int
     
     @State var selection: Set<Song> = []
@@ -55,6 +57,7 @@ struct AllSongs: View {
             })
             // TODO implement
             Button("Record",systemImage: "waveform") {
+                recorderShowing = true
             }
         }
         .sheet(isPresented: $documentPickerShowing, content: {
@@ -65,6 +68,9 @@ struct AllSongs: View {
         })
         .sheet(isPresented: $videoPickerShowing, content: {
             VideoPicker()
+        })
+        .sheet(isPresented: $recorderShowing, content: {
+            RecorderView(recorder: recorder)
         })
         .navigationTitle("All Songs")
     }

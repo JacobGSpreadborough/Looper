@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PlaylistSongView: View {
     var playlist: Playlist
-    @Binding var looper: Looper
+    @ObservedObject var looper: Looper
     @State var selection: Song?
     var body: some View {
         List(selection: $selection){

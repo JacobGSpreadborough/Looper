@@ -10,7 +10,7 @@ import AudioKit
 import Waveform
 
 struct SongNavigator: View {
-    @Binding var looper: Looper
+    @ObservedObject var looper: Looper
     @Binding var currentTime: TimeInterval
     @Binding var sliderUpdating: Bool
     @State private var wasPlaying: Bool = false

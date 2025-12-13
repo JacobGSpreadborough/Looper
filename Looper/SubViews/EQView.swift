@@ -10,7 +10,7 @@ import AudioKit
 
 struct EQView: View{
     @State var foo: String = ""
-    @Binding var looper: Looper
+    @ObservedObject var looper: Looper
     @State var EQ60: AUValue = 0;
     @State var EQ150: AUValue = 0;
     @State var EQ400: AUValue = 0;
@@ -105,5 +105,5 @@ struct EQView: View{
 
 #Preview {
     @Previewable @State var looper = Looper(song: Song.demoSong)
-    EQView(looper: $looper)
+    EQView(looper: looper)
 }

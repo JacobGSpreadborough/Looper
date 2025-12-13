@@ -22,7 +22,7 @@ struct EQSlider: View {
                 value: $EQ,
                 in: range
             )
-            .frame(width:300)
+            .frame(width:300, alignment: .center)
             .fixedSize()
             .rotationEffect(Angle(degrees: -90))
             Text(label)

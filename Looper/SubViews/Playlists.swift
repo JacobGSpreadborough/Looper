@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct Playlists: View {
-    @Binding var looper: Looper
+    @ObservedObject var looper: Looper
     @Binding var currentTab: Int
     
     @Query private var playlists: [Playlist]
@@ -27,7 +27,7 @@ struct Playlists: View {
                 // TODO just do this in the list
                 ForEach(playlists) { playlist in
                     NavigationLink(playlist.name){
-                        PlaylistSongView(playlist: playlist, looper: $looper)
+                        PlaylistSongView(playlist: playlist, looper: looper)
                     }
                 }
             }

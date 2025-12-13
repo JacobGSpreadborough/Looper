@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SpeedAndPitch: View{
-    @Binding var looper: Looper
+    @ObservedObject var looper: Looper
     @State private var speed: Float = 1
     
     var body: some View {

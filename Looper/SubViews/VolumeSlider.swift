@@ -9,7 +9,7 @@ import SwiftUI
 import AudioKit
 
 struct VolumeSlider: View {
-    @Binding var looper: Looper
+    @ObservedObject var looper: Looper
     @State private var sliderVolume: Float = 2
     private let volumeIcons = ["speaker.3", "speaker.2", "speaker.1", "speaker", "speaker.slash"]
     //
