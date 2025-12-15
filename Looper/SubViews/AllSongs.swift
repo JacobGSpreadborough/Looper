@@ -35,6 +35,8 @@ struct AllSongs: View {
             currentTab = 0
             // just use first element of the set, it's impossible to have more than one since the list is not in edit mode
             looper.loadAudio(song: selection.first!)
+            // reset selection
+            selection = []
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing, content: {

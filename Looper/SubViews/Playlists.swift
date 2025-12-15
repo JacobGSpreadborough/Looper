@@ -32,16 +32,15 @@ struct Playlists: View {
                 }
             }
             Button("New Playlist", systemImage: "plus") {
-                    nameDialogShowing = true
+                nameDialogShowing = true
             }
         }
         // present name dialog
         // create playlist and present song list once a name is entered
-        .alert("playist name", isPresented: $nameDialogShowing) {
+        .alert("Playlist name", isPresented: $nameDialogShowing) {
             TextField("Enter playlist title", text: $newName)
             Button("Confirm") {
                 songPickerShowing = true
-               // createPlaylist(name: newName)
             }
             Button("Cancel",role: .cancel){}
         }
@@ -52,43 +51,38 @@ struct Playlists: View {
                 SongList(selection: $selection, editMode: .active, deletable: false)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing){
-                            // create new playlist, add songs, insert into storage
+                            // create and store new playlist
                             Button("Done"){
-                                let newPlaylist = Playlist(name: newName)
-                                newPlaylist.songs.append(contentsOf: selection)
-                                context.insert(newPlaylist)
-                                do {
-                                    try context.save()
-                                } catch {
-                                    fatalError("save failed")
-                                }
-                                // dismiss song list sheet
-                                songPickerShowing = false
-                                // reset new name variable
-                                newName = "New Playlist"
+                                createPlaylist(name: newName, songs: selection)
                             }
                         }
                         ToolbarItem(placement: .topBarLeading){
-                            Button("Cancel", role: .cancel){}
+                            Button("Cancel", role: .cancel){
+                                songPickerShowing = false
+                            }
                         }
                     }
             }
         }
-            
         .onChange(of: selection) {
             print("song selected")
         }
         .navigationTitle("Playlists")
     }
     
-    private func createPlaylist(name: String) {
-        print("creating playlist")
-        newPlaylist = Playlist(name: name)
+    private func createPlaylist(name: String, songs: Set<Song>) {
+        
+        let newPlaylist = Playlist(name: name)
+        newPlaylist.songs.append(contentsOf: songs)
+        
         context.insert(newPlaylist)
-        do{
+        do {
             try context.save()
         } catch {
-            fatalError("save failed")
+            print("save failed \(error)")
         }
+        
+        songPickerShowing = false
+        newName = "New Playlist"
     }
 }
