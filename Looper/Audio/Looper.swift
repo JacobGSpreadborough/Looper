@@ -160,6 +160,11 @@ class Looper: ObservableObject {
     
     open func play(){
         isPlaying = true
+        do{
+            try engine.start()
+        } catch {
+            print("could not start engine \(error)")
+        }
         player.play()
     }
     

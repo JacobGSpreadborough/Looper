@@ -38,9 +38,9 @@ struct LooperApp: App {
                     }
                     .tag(2)
                     .padding()
-                }
-            
+            }
         }
+        
         .modelContainer(for: [Song.self, Playlist.self])
     }
 }

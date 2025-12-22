@@ -54,16 +54,6 @@
 			path = Looper;
 			sourceTree = "<group>";
 		};
-		F6A61EDC2EAB8599009A1210 /* LooperTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LooperTests;
-			sourceTree = "<group>";
-		};
-		F6A61EE62EAB8599009A1210 /* LooperUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LooperUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,8 +88,6 @@
 			isa = PBXGroup;
 			children = (
 				F6A61ECE2EAB8598009A1210 /* Looper */,
-				F6A61EDC2EAB8599009A1210 /* LooperTests */,
-				F6A61EE62EAB8599009A1210 /* LooperUITests */,
 				F6A61ECD2EAB8598009A1210 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -155,9 +143,6 @@
 			dependencies = (
 				F6A61EDB2EAB8599009A1210 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				F6A61EDC2EAB8599009A1210 /* LooperTests */,
-			);
 			name = LooperTests;
 			packageProductDependencies = (
 			);
@@ -177,9 +162,6 @@
 			);
 			dependencies = (
 				F6A61EE52EAB8599009A1210 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				F6A61EE62EAB8599009A1210 /* LooperUITests */,
 			);
 			name = LooperUITests;
 			packageProductDependencies = (
