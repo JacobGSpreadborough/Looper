@@ -19,9 +19,6 @@ struct RecorderView: View {
     
     @State var recordingDuration: TimeInterval = 0
     @State var recordingTimer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
-    @State var recordingName = "New Recording"
-    
-    @State var nameDialogShowing = false
     
     var body: some View {
         NavigationStack{
@@ -42,16 +39,9 @@ struct RecorderView: View {
                     recorder.stopRecording()
                     // dismiss the sheet and open the alert to enter recording name
                     dismiss.callAsFunction()
-                    nameDialogShowing = true
                     do {
                         let data = try recorder.recordingURL.bookmarkData()
-                        var title: String
-                        // apply default name if the user doesn't specify one
-                        if recordingName == "New Recording" {
-                            title = recorder.recordingURL.lastPathComponent
-                        } else {
-                            title = recordingName
-                        }
+                        let title = recorder.recordingURL.lastPathComponent
                         // create and insert song from recording, save context
                         let newSong = Song(title: title, artist: "User", bookmark: data, isSecure: false)
                         context.insert(newSong)
@@ -60,12 +50,6 @@ struct RecorderView: View {
                         print("song creation failed \(error)")
                     }
                 }
-            }
-        }
-        .alert("Recording name", isPresented: $nameDialogShowing) {
-            TextField("Enter recording title", text: $recordingName)
-            Button("Confirm") {
-                nameDialogShowing = false
             }
         }
         .onAppear(){

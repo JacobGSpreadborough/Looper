@@ -50,6 +50,9 @@ class Looper: ObservableObject {
     }
     
     private func attachPlayer() {
+        
+        player.completionHandler = completionHandler
+        
         player.isEditTimeEnabled = true;
         player.isLooping = false
         player.volume = 0.5

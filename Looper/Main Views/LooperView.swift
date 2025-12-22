@@ -23,21 +23,23 @@ struct LooperView: View {
     @State private var currentTime: TimeInterval = 0
     @State private var sliderUpdating: Bool = true;
     
-    @State private var menuShowing: Bool = true
+    @State private var menuShowing: Bool = false
     
     var body: some View {
         NavigationView {
             // main stack
-            VStack {
-                // song navigation
-                SongNavigator(looper: looper, currentTime: $currentTime, sliderUpdating: $sliderUpdating)
-                // speed and pitch
-                // TODO add pitch shift by cents
-                SpeedAndPitch(looper: looper)
-                // loop controls
-                LoopNavigator(looper: looper, sliderUpdating: $sliderUpdating, currentTime: $currentTime)
-                // volume
-                VolumeSlider(looper: looper)
+            ScrollView(.vertical){
+                VStack {
+                    // song navigation
+                    SongNavigator(looper: looper, currentTime: $currentTime, sliderUpdating: $sliderUpdating)
+                    // speed and pitch
+                    // TODO add pitch shift by cents
+                    SpeedAndPitch(looper: looper)
+                    // loop controls
+                    LoopNavigator(looper: looper, sliderUpdating: $sliderUpdating, currentTime: $currentTime)
+                    // volume
+                    VolumeSlider(looper: looper)
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing, content: {

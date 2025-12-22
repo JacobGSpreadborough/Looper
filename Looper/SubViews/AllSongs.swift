@@ -31,12 +31,19 @@ struct AllSongs: View {
             SongList(selection: $selection, editMode: .inactive, deletable: true)
         }
         .onChange(of: selection) {
+            print("selection changed")
             // go back to looper tab
             currentTab = 0
             // just use first element of the set, it's impossible to have more than one since the list is not in edit mode
-            looper.loadAudio(song: selection.first!)
-            // reset selection
-            selection = []
+            // pretty hacky fix here, we want to clear the selected song after loading it, but that calls .onChange() with a nil selection value
+            // it works but .onChange always gets called twice. BAD.
+            if let song = selection.first {
+                looper.loadAudio(song: song)
+                selection = []
+            } else {
+                return
+            }
+            
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing, content: {
