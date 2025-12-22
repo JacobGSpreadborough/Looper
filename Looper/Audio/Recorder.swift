@@ -34,7 +34,6 @@ class Recorder: NSObject, ObservableObject {
     }
     
     func startRecording() {
-        // TODO: start recording timer
         setupSession()
         
         let format = DateFormatter()
@@ -67,7 +66,6 @@ class Recorder: NSObject, ObservableObject {
         // TODO: decrement on delete?
         Recorder.recordingCount += 1
         try!session.setActive(false)
-        // TODO: stop recording timer
     }
     
     private func setupSession() {

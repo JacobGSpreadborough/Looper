@@ -28,7 +28,9 @@ struct RecorderView: View {
                 }
                 .monospacedDigit()
                 .padding()
-            Button("record") {
+
+            
+            Button {
                 if !recorder.isRecording {
                     // start timer and recorder
                     self.recordingTimer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
@@ -51,6 +53,16 @@ struct RecorderView: View {
                     }
                 }
             }
+            label: {
+                Image("microphone")
+                    .scaleEffect(0.25)
+            }
+            .background(Color.red)
+            .clipShape(.circle)
+            .scaleEffect(0.3)
+            .border(.black)
+            .frame(height: 100)
+            .padding()
         }
         .onAppear(){
             // stop timer on appear
