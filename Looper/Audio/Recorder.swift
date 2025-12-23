@@ -7,10 +7,11 @@
 
 import AVFoundation
 import Combine
+import SwiftUI
 
 class Recorder: NSObject, ObservableObject {
     
-    static var recordingCount: Int = 1
+    @AppStorage("recordingCount") private var recordingCount: Int = 1
 
     private var recorder: AVAudioRecorder!
     private var session: AVAudioSession!
@@ -36,10 +37,11 @@ class Recorder: NSObject, ObservableObject {
     func startRecording() {
         setupSession()
         
-        let format = DateFormatter()
-        format.dateFormat = "dd-MM-yyyy"
-        let dateString = format.string(from: Date())
-        let fileName = "New Recording [" + dateString + " " + Recorder.recordingCount.description + "].wav"
+        //let format = DateFormatter()
+        //format.dateFormat = "dd-MM-yyyy"
+        //let dateString = format.string(from: Date())
+        //let fileName = "New Recording [" + dateString + " " + recordingCount.description + "].wav"
+        let fileName = "New Recording " + recordingCount.description + ".wav"
         // create a unique url for each recording
         recordingURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
         
@@ -64,7 +66,7 @@ class Recorder: NSObject, ObservableObject {
         hasRecording = true
         // increment static count
         // TODO: decrement on delete?
-        Recorder.recordingCount += 1
+        recordingCount += 1
         try!session.setActive(false)
     }
     

@@ -19,7 +19,7 @@ struct LoopNavigator: View {
     var body: some View {
         VStack{
             Text("Loop")
-                .padding()
+                //.padding()
             HStack{
                 // move start of loop back 1 second
                 Button(action: {
@@ -124,7 +124,7 @@ struct LoopNavigator: View {
                 .foregroundColor(.blue)
                 .padding(.vertical)
                 .opacity(0.25)
-                .frame(width:175)
+                .frame(width:175,height: 75)
                 Slider(
                     value: $currentTime,
                     in: looper.player.editStartTime...looper.player.editEndTime,
@@ -149,13 +149,18 @@ struct LoopNavigator: View {
                         }
                     }
                 )
-                //.padding(.vertical)
-                .padding(.horizontal)
                 .disabled(!looper.isLooping)
             }
         }
+        .padding()
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10))
 }
 
+}
+
+#Preview {
+    @Previewable @State var x: TimeInterval = 0.0
+    @Previewable @State var y: Bool = false
+    LoopNavigator(looper: Looper(song:Song.demoSong), sliderUpdating: $y, currentTime: $x)
 }

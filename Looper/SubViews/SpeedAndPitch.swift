@@ -17,7 +17,6 @@ struct SpeedAndPitch: View{
             Text("Speed: \((speed * 100), specifier: "%0.0f")%")
                 .monospacedDigit()
                 .fixedSize()
-                .padding()
             // TODO make this logarithmic
             Slider(
                 value: $speed,

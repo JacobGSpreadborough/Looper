@@ -20,14 +20,14 @@ struct SongNavigator: View {
             Text("\(looper.fileName.description)")
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-                .padding()
+                //.padding()
             ZStack{
                 Waveform(samples: looper.samples)
             
                     .foregroundColor(.blue)
                     .padding(.vertical)
                     .opacity(0.25)
-                    .frame(width: 175)
+                    .frame(width: 175, height: 75)
                 Slider(
                     value: $currentTime,
                     in: 0...looper.duration,
@@ -59,11 +59,10 @@ struct SongNavigator: View {
                 )
             }
             .onAppear {
+                // warning here about referencing a main actor-isolated property but it works as expected
                 Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
                     if(sliderUpdating){
                         currentTime = looper.player.currentTime
-                        //print("ContentView current time: \(currentTime)")
-                        //print("Player currentTime:       \(looper.player.currentTime)")
                     }
                 })
             }
@@ -129,4 +128,10 @@ struct SongNavigator: View {
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
+}
+
+#Preview{
+    @Previewable @State var time: TimeInterval = 0.0
+    @Previewable @State var slider: Bool = false
+    SongNavigator(looper: Looper(song: Song.demoSong), currentTime: $time, sliderUpdating: $slider)
 }
