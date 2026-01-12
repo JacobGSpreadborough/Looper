@@ -11,6 +11,7 @@ struct PlaylistSongView: View {
     var playlist: Playlist
     @ObservedObject var looper: Looper
     @State var selection: Song?
+    @Binding var currentTab: Int
     var body: some View {
         List(selection: $selection){
             ForEach(playlist.songs) { song in
@@ -18,8 +19,10 @@ struct PlaylistSongView: View {
                     .tag(song)
             }
             .onChange(of: selection) {
+                currentTab = 0
                 looper.loadAudio(song: selection!)
             }
         }
+        .navigationTitle(playlist.name)
     }
 }

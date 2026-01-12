@@ -34,7 +34,7 @@ struct LibraryView: View {
                 NavigationLink(destination: Favorites(currentTab: $currentTab), label: {
                     Label("Favorites", systemImage: "star")
                 })
-                NavigationLink(destination: Recents(currentTab: $currentTab), label: {
+                NavigationLink(destination: Recents(looper: looper, currentTab: $currentTab), label: {
                     Label("Recents", systemImage: "clock")
                 })
             }
@@ -79,16 +79,7 @@ struct LibraryView: View {
     }
 }
 
-struct Recents: View {
-    @Binding var currentTab: Int
-    var body: some View {
-        List{
-            
-        }
-        .navigationTitle("Recents")
-    }
 
-}
 struct Favorites: View {
     @Binding var currentTab: Int
     var body: some View {

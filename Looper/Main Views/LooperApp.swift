@@ -10,8 +10,9 @@ import SwiftData
 
 @main
 struct LooperApp: App {
-    // start looper with static demo audio
-    @StateObject var looper = Looper(song: Song.demoSong)
+    // start looper with the most recently played song
+    // defaults to demo audio
+    @StateObject var looper = Looper(song: Playlist.recents.songs.first!)
     @StateObject var recorder = Recorder()
     @State var currentTab = 0
     var body: some Scene {
@@ -40,7 +41,6 @@ struct LooperApp: App {
                     .padding()
             }
         }
-        
         .modelContainer(for: [Song.self, Playlist.self])
     }
 }

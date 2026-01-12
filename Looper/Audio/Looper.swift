@@ -38,8 +38,6 @@ class Looper: ObservableObject {
         
         engine = AudioEngine()
         
-        print("looper initializing")
-        
         player = AudioPlayer()
         
         player.completionHandler = completionHandler
@@ -103,6 +101,7 @@ class Looper: ObservableObject {
     }
     
     func completionHandler() {
+        print("song finished")
         stop()
     }
    
@@ -115,6 +114,12 @@ class Looper: ObservableObject {
     
     open func changeSpeed(percent: AUValue) {
         speedPitch.rate = percent
+    }
+    
+    // TODO: doesn't work
+    open func pan(pan: AUValue) {
+        print("balance: \(pan)")
+        engine.mainMixerNode?.pan = pan
     }
     
     open func setLoopStart(startTime: TimeInterval) {
@@ -175,7 +180,6 @@ class Looper: ObservableObject {
         isPlaying = false
         player.pause()
     }
-    
     open func stop() {
         isPlaying = false
         player.stop()
@@ -190,6 +194,4 @@ class Looper: ObservableObject {
         }
         player.seek(time:time - player.editStartTime)
     }
-
-
 };

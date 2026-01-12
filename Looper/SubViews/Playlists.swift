@@ -24,12 +24,12 @@ struct Playlists: View {
     var body: some View {
         NavigationStack{
             List{
-                // TODO just do this in the list
                 ForEach(playlists) { playlist in
                     NavigationLink(playlist.name){
-                        PlaylistSongView(playlist: playlist, looper: looper)
+                        PlaylistSongView(playlist: playlist, looper: looper, currentTab: $currentTab)
                     }
                 }
+                .onDelete(perform: deletePlaylist)
             }
             Button("New Playlist", systemImage: "plus") {
                 nameDialogShowing = true
@@ -46,7 +46,6 @@ struct Playlists: View {
         }
         // present song list
         .sheet(isPresented: $songPickerShowing){
-            // TODO: add cancel / done button
             NavigationView {
                 SongList(selection: $selection, editMode: .active, deletable: false)
                     .toolbar {
@@ -85,4 +84,11 @@ struct Playlists: View {
         songPickerShowing = false
         newName = "New Playlist"
     }
+    
+    private func deletePlaylist(indexes: IndexSet) {
+        for i in indexes {
+            context.delete(playlists[i])
+        }
+    }
+    
 }

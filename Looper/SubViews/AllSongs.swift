@@ -38,6 +38,9 @@ struct AllSongs: View {
             // pretty hacky fix here, we want to clear the selected song after loading it, but that calls .onChange() with a nil selection value
             // it works but .onChange always gets called twice. BAD.
             if let song = selection.first {
+                // add selected song to the beginning of the recently played list
+                Playlist.recents.prepend(song: song)
+                context.insert(Playlist.recents)
                 looper.loadAudio(song: song)
                 selection = []
             } else {

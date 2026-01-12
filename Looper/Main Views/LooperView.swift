@@ -41,6 +41,7 @@ struct LooperView: View {
                     VolumeSlider(looper: looper)
                 }
             }
+            
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing, content: {
                     Button("Add Song", systemImage: "plus") {
@@ -48,6 +49,7 @@ struct LooperView: View {
                     }
                 })
             }
+            
             .confirmationDialog("Add Song", isPresented: $menuShowing) {
                 Button("Apple Library", systemImage: "music.note.list", action: {
                     musicPickerShowing = true
@@ -79,4 +81,8 @@ struct LooperView: View {
             })
         }
     }
+}
+
+#Preview {
+    LooperView(looper: Looper(song: Song.demoSong), recorder: Recorder(), musicPickerShowing: false, documentPickerShowing: false, videoPickerShowing: false, recorderShowing: false)
 }

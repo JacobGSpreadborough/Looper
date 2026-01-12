@@ -9,12 +9,7 @@ import SwiftData
 import AVFAudio
 
 @Model
-class Song: Identifiable, Equatable, Comparable {
-
-    // comform to comparable
-    static func < (lhs: Song, rhs: Song) -> Bool {
-        return lhs.bookmark == rhs.bookmark
-    }
+class Song {
     
     var title: String
     var artist: String
