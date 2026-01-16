@@ -20,6 +20,12 @@ struct SettingsView: View {
                         Text("Equalization")
                     }
                 })
+                NavigationLink(destination: HelpView(), label: {
+                    HStack {
+                        Image(systemName: "info.circle")
+                        Text("Help")
+                    }
+                })
             }
             .navigationTitle("Settings")
         }

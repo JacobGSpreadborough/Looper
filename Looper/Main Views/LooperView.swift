@@ -49,7 +49,6 @@ struct LooperView: View {
                     }
                 })
             }
-            
             .confirmationDialog("Add Song", isPresented: $menuShowing) {
                 Button("Apple Library", systemImage: "music.note.list", action: {
                     musicPickerShowing = true

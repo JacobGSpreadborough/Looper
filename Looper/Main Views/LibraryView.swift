@@ -45,6 +45,8 @@ struct LibraryView: View {
                     }
                 })
             }
+            // TODO: systemImages don't work, and this looks bad in iOS 26
+            // recreate the old confirmationDialog appearance
             .confirmationDialog("Add Song", isPresented: $menuShowing) {
                 Button("Apple Library", systemImage: "music.note.list", action: {
                     musicPickerShowing = true
@@ -54,10 +56,11 @@ struct LibraryView: View {
                     
                 })
                 // TODO implement
+                /*
                 Button("Videos", systemImage: "camera", action: {
                     videoPickerShowing = true
                 })
-                // TODO implement
+                */
                 Button("Record",systemImage: "waveform") {
                     recorderShowing = true
                 }
