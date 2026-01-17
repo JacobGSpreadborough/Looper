@@ -14,6 +14,7 @@ struct SongDisplay: View {
         let image = UIImage(data: (song.imageData ?? defaultImageData), scale: 20)!
         HStack {
             Image(uiImage: image)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
             Text(song.artist + " - " + song.title)
         }
     }

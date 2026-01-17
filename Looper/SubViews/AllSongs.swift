@@ -40,7 +40,7 @@ struct AllSongs: View {
             if let song = selection.first {
                 // add selected song to the beginning of the recently played list
                 Playlist.recents.prepend(song: song)
-                context.insert(Playlist.recents)
+                
                 looper.loadAudio(song: song)
                 selection = []
             } else {

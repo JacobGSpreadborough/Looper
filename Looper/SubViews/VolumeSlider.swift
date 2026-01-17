@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AudioKit
+import MediaPlayer
 
 struct VolumeSlider: View {
     @ObservedObject var looper: Looper
@@ -16,22 +17,27 @@ struct VolumeSlider: View {
     private let volumeIcons = ["speaker.3", "speaker.2", "speaker.1", "speaker", "speaker.slash"]
     
     var body: some View {
-            // volume slider and icon
-            HStack {
-                Image(systemName: volumeIcons[Int(4 - sliderVolume)])
-                    .fixedSize(horizontal: false, vertical: true)
-                Slider(
-                    value: $sliderVolume,
-                    in: 0...4
-                )
-                .fixedSize(horizontal: false, vertical: true)
-                .onChange(of: sliderVolume, {
-                    looper.player.volume = sliderVolume/4
-                })
-            }
-
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        
+        MPVolumeViewRepresentable()
+            .frame(width: 325, height: 20)
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
     }
+}
+
+// Source - https://stackoverflow.com/a
+// Posted by Jack Vanderpump
+// Retrieved 2026-01-17, License - CC BY-SA 4.0
+
+struct MPVolumeViewRepresentable: UIViewRepresentable {
+
+    func makeUIView(context: Context) -> MPVolumeView {
+        MPVolumeView(frame: .zero)
+    }
+
+    func updateUIView(_ view: MPVolumeView, context: Context) {
+
+        }
+
 }

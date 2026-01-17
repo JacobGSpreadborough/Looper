@@ -14,7 +14,7 @@ struct LooperApp: App {
     // defaults to demo audio
     @StateObject var looper = Looper(song: Playlist.recents.songs.first!)
     @StateObject var recorder = Recorder()
-    @State var currentTab = 0
+    @State var currentTab = 1
     var body: some Scene {
         WindowGroup {
             TabView (selection: $currentTab){
