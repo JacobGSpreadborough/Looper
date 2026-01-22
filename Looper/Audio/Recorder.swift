@@ -18,11 +18,12 @@ class Recorder: NSObject, ObservableObject {
     
     @Published var isRecording: Bool = false
     @Published var hasRecording: Bool = false
-    // TODO: add incremental or date-unique recording names
+
     @Published var recordingURL: URL!
     @Published var duration: TimeInterval = 0
     
     let settings = [
+        // audio settings for .wav
         AVFormatIDKey: Int(kAudioFormatLinearPCM),
         AVSampleRateKey: 48_000,
         AVNumberOfChannelsKey: 2,
@@ -36,16 +37,11 @@ class Recorder: NSObject, ObservableObject {
     
     func startRecording() {
         setupSession()
-        
-        //let format = DateFormatter()
-        //format.dateFormat = "dd-MM-yyyy"
-        //let dateString = format.string(from: Date())
-        //let fileName = "New Recording [" + dateString + " " + recordingCount.description + "].wav"
+        // each recording has a unique name
         let fileName = "New Recording " + recordingCount.description + ".wav"
-        // create a unique url for each recording
         recordingURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
         
-        print("recording to: \(String(describing: recordingURL))")
+        //print("recording to: \(String(describing: recordingURL))")
         do {
             recorder = try AVAudioRecorder(url: recordingURL, settings: settings)
             recorder.delegate = self
@@ -65,7 +61,6 @@ class Recorder: NSObject, ObservableObject {
         isRecording = false
         hasRecording = true
         // increment static count
-        // TODO: decrement on delete?
         recordingCount += 1
         try!session.setActive(false)
     }

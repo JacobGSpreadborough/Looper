@@ -18,7 +18,7 @@ struct LooperView: View {
     
     @State var musicPickerShowing: Bool = false
     @State var documentPickerShowing: Bool = false
-    @State var videoPickerShowing: Bool = false
+    //@State var videoPickerShowing: Bool = false
     @State var recorderShowing: Bool = false
     @State private var currentTime: TimeInterval = 0
     @State private var sliderUpdating: Bool = true;
@@ -57,11 +57,11 @@ struct LooperView: View {
                     documentPickerShowing = true
                     
                 })
-                // TODO implement
+                /*
                 Button("Videos", systemImage: "camera", action: {
                     videoPickerShowing = true
                 })
-                // TODO implement
+                */
                 Button("Record",systemImage: "waveform") {
                     recorderShowing = true
                 }
@@ -72,9 +72,11 @@ struct LooperView: View {
             .sheet(isPresented: $musicPickerShowing, content: {
                 MusicPicker()
             })
+            /*
             .sheet(isPresented: $videoPickerShowing, content: {
                 VideoPicker()
             })
+             */
             .sheet(isPresented: $recorderShowing, content: {
                 RecorderView(recorder: recorder)
             })
@@ -83,5 +85,5 @@ struct LooperView: View {
 }
 
 #Preview {
-    LooperView(looper: Looper(song: Song.demoSong), recorder: Recorder(), musicPickerShowing: false, documentPickerShowing: false, videoPickerShowing: false, recorderShowing: false)
+    LooperView(looper: Looper(song: Song.demoSong), recorder: Recorder(), musicPickerShowing: false, documentPickerShowing: false, recorderShowing: false)
 }

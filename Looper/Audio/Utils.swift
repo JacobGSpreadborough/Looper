@@ -26,7 +26,15 @@ func setToArray(set: Set<Song>) -> [Song] {
     }
     return output
 }
-//
+
+func setToArray<T>(set: Set<T>) -> [T]{
+    var output = [T]()
+    for element in set {
+        output.append(element)
+    }
+    return output
+}
+
 func stringPlural(number: Float) -> String {
     if(number != 1 && number != -1) {
         return "s"

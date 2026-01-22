@@ -17,7 +17,7 @@ struct LibraryView: View {
     
     @State private var documentPickerShowing: Bool = false
     @State private var musicPickerShowing: Bool = false
-    @State private var videoPickerShowing: Bool = false
+    //@State private var videoPickerShowing: Bool = false
     @State private var recorderShowing: Bool = false
     @State var menuShowing: Bool = false
     
@@ -71,9 +71,11 @@ struct LibraryView: View {
             .sheet(isPresented: $musicPickerShowing, content: {
                 MusicPicker()
             })
+            /*
             .sheet(isPresented: $videoPickerShowing, content: {
                 VideoPicker()
             })
+             */
             .sheet(isPresented: $recorderShowing, content: {
                 RecorderView(recorder: recorder)
             })
